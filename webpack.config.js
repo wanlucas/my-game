@@ -2,7 +2,7 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-	entry: '/src/game/game.ts',
+	entry: '/src/game/index.ts',
 	mode: 'development', 
 	output: {
 		filename: 'bundle.js',
@@ -23,7 +23,7 @@ module.exports = {
 	plugins: [
 		new CopyWebpackPlugin({
 			patterns: [
-				{ from: './src/index.html', to: 'index.html' },
+				{ from: './src/game/index.html', to: 'index.html' },
 			]
 		})
 	]

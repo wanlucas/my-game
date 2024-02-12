@@ -12,3 +12,5 @@ const game = new Game(
   canvas.width, 
   canvas.height
 );
+
+game.start();

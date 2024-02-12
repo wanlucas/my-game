@@ -1,4 +1,6 @@
-import GameObject, { Position } from './GameObject';
+import { Position } from '../object';
+import GameObject from '../object/Rectangle';
+
 
 export interface Velocity {
   x: number;

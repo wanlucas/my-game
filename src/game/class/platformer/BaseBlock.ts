@@ -1,6 +1,6 @@
+import Platformer from '.';
 import settings from '../../settings';
-import { type Position } from '../object/GameObject';
-import Platformer from './Platformer';
+import { Position } from '../object';
 
 export default class BaseBlock extends Platformer {
   constructor (

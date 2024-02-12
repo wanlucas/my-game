@@ -1,7 +1,7 @@
+import Entity from '.';
 import settings from '../../settings';
+import { Position } from '../object';
 import Keyboard from '../service/Keyboard';
-import Entity from './Entity';
-import { Position } from './GameObject';
 
 export default class Player extends Entity {
   private speed = 5;

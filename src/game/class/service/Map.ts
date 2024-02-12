@@ -1,8 +1,8 @@
 import settings from '../../settings';
-import { Position } from '../object/GameObject';
-import Player from '../object/Player';
+import Player from '../entity/Player';
+import { Position } from '../object';
+import Platformer from '../platformer';
 import BaseBlock from '../platformer/BaseBlock';
-import Platformer from '../platformer/Platformer';
 
 const blocksMapper = {
   1: BaseBlock,

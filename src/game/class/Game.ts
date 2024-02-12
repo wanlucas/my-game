@@ -20,19 +20,19 @@ export default class Game {
   }
 
   public update() {
-    this.map.player.update(this.keyboard);
-
-    this.map.player.velocity.y += 0.5;
-
     this.map.blocks.forEach((block) => {
-      if (this.map.player.xCollisionWithBlock(block)) {
-        this.map.player.velocity.x = 0;
+      if (this.map.player.xCollisionWithRect(block)) {
+        this.map.player.onXRectCollision(block);
       }
 
-      if (this.map.player.yCollisionWithBlock(block)) {
-        this.map.player.velocity.y = 0;
+      if (this.map.player.yCollisionWithRect(block)) {
+        this.map.player.onYRectCollision(block);
       }
     });
+
+    this.map.player.update();
+
+    this.map.player.velocity.y += 0.5;
   }
 
   public loop() {

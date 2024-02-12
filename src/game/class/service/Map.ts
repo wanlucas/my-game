@@ -1,36 +1,24 @@
 import settings from '../../settings';
-import Player from '../entity/Player';
-import { Position } from '../object';
-import Platformer from '../platformer';
-import BaseBlock from '../platformer/BaseBlock';
-
-const blocksMapper = {
-  1: BaseBlock,
-} as Record<string, { new (position: Position): Platformer }>;
-
-const test = `
-  -----------------
-  -----------------
-  -----------------
-  ----1------------
-  ---1-1-----------
-  -----------------
-  p------1---------
-  ------1----------
-  11111111111111111
-`;
+import platformers from '../platformer';
+import Rectangle from '../object/Rectangle';
+import Player, { id as PLAYER_ID } from '../entity/Player';
+import maps from '../../data/maps';
 
 export type MapData = string;
 
 export default class Map {
-  public blocks: Platformer[];
+  private i = 0;
+  public blocks: Rectangle[] = [];
   public player!: Player;
   public width = settings.width;
   public height = settings.height;
 
-  constructor(data: MapData = test) {
-    this.blocks = [];
-    this.parse(data);
+  get current() {
+    return maps[this.i];
+  }
+
+  constructor() {
+    this.parse(this.current);
   }
 
   private parse(data: MapData) {
@@ -48,9 +36,9 @@ export default class Map {
         const y = i * settings.tileHeight;
         const position = { x, y };
 
-        if (tile === 'p') this.player = new Player(position);
+        if (tile === PLAYER_ID) this.player = new Player(position);
         else {
-          const Block = blocksMapper[tile];
+          const Block = platformers[tile];
 
           if (!Block) throw new Error(`Invalid block type: ${tile}`);
 

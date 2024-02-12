@@ -1,12 +1,7 @@
-import { Position } from '../object';
-import GameObject from '../object/Rectangle';
+import { Position } from '../object/GameObject';
+import Rectangle from '../object/Rectangle';
+import BaseBlock, { id as baseBlockId } from './BaseBlock';
 
-export default class Platformer extends GameObject {
-  constructor (
-    public position: Position,
-    public width: number,
-    public height: number
-  ) {
-    super(position, width, height);
-  }
-}
+export default {
+  [baseBlockId]: BaseBlock,
+} as Record<string, { new (position: Position): Rectangle }>;

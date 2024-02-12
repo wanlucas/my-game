@@ -1,10 +1,12 @@
-import Platformer from '.';
 import settings from '../../settings';
-import { Position } from '../object';
+import { Position } from '../object/GameObject';
+import Rectangle from '../object/Rectangle';
 
-export default class BaseBlock extends Platformer {
+export const id = '1';
+
+export default class BaseBlock extends Rectangle {
   constructor (
-    public position: Position,
+    position: Position,
   ) {
     super(
       position,

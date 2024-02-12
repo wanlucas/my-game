@@ -1,8 +1,10 @@
 import Entity from '../object/RectEntity';
 import settings from '../../settings';
-import { Position } from '../object';
+import { Position } from '../object/GameObject';
 import Keyboard from '../service/Keyboard';
 import Rectangle from '../object/Rectangle';
+
+export const id = 'p';
 
 export default class Player extends Entity {
   private maxSpeed = 5;
@@ -16,7 +18,7 @@ export default class Player extends Entity {
     super(position, settings.tileWidth, settings.tileHeight * 2);
   }
 
-  public onBottomCollisionRect(rect: Rectangle) {
+  protected onBottomCollisionRect(rect: Rectangle) {
     this.resetJump();
     super.onBottomCollisionRect(rect);
   }

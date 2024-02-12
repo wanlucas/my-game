@@ -1,4 +1,4 @@
-import { Position } from '.';
+import { Position } from './GameObject';
 import Rectangle from './Rectangle';
 
 
@@ -19,13 +19,12 @@ export default class RectEntity extends Rectangle {
     };
   }
 
-  public onTopCollisionRect(rect: Rectangle) {
-    console.log('interno');
+  protected onTopCollisionRect(rect: Rectangle) {
     this.velocity.y = 0;
     this.position.y = rect.position.y + rect.height;
   }
 
-  public onBottomCollisionRect(rect: Rectangle) {
+  protected onBottomCollisionRect(rect: Rectangle) {
     this.velocity.y = 0;
     this.position.y = rect.position.y - this.height;
   }

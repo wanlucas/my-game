@@ -1,4 +1,4 @@
-import GameObject, { Position } from '.';
+import GameObject, { Position } from './GameObject';
 
 export default class Rectangle extends GameObject {
   constructor(

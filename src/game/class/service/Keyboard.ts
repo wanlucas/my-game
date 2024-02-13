@@ -4,8 +4,15 @@ export default class Keyboard {
   private upEvents: Map<string, (() => void)[]> = new Map();
 
   constructor() {
-    window.addEventListener('keydown', (event) => this.press(event.key));
-    window.addEventListener('keyup', (event) => this.release(event.key));
+    window.addEventListener(
+      'keydown',
+      (event) => !event.repeat && this.press(event.key)
+    );
+
+    window.addEventListener(
+      'keyup',
+      (event) => !event.repeat && this.release(event.key)
+    );
   }
 
   public press = (key: string) => {

@@ -1,7 +1,6 @@
 import { Position } from './GameObject';
 import Rectangle from './Rectangle';
 
-
 export interface Velocity {
   x: number;
   y: number;

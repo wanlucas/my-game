@@ -8,19 +8,22 @@ import Sprite from '../service/Sprite';
 export const id = 'p';
 
 const config = {
-  maxSpeed: 5,
-  lowAcc: 0.1,
-  acc: 1.5,
+  speed: 4,
+  maxSpeed: 8,
+  lowAcc: 0.2,
+  acc: 0.5,
   jumps: 2,
   width: settings.tileWidth / 2,
   height: settings.tileHeight,
+  crouchedHeight: settings.tileHeight * 0.7,
 };
 
 export default class Player extends Entity {
   private sprite = new Sprite('data/sprites/player.png');
-  private jumpCount = 0;
   private movingR = () => false;
   private movingL = () => false;
+  private jumpCount = 0;
+  private speed = config.speed;
 
   constructor(position: Position) {
     super(position, config.width, config.height);
@@ -49,6 +52,8 @@ export default class Player extends Entity {
       { loop: false }
     );
 
+    this.sprite.create('crouch', [[540, 136, 28, 28]]);
+
     this.sprite.set('idle');
   }
 
@@ -57,7 +62,7 @@ export default class Player extends Entity {
     super.onBottomCollisionRect(rect);
   }
 
-  private running() {
+  private moving() {
     return this.movingL() || this.movingR();
   }
 
@@ -65,27 +70,41 @@ export default class Player extends Entity {
     return this.jumpCount > 0;
   }
 
-  private faling() {
+  private fallingDown() {
     return this.velocity.y > 0;
   }
 
+  private crouched() {
+    return this.height === config.crouchedHeight;
+  }
+
   private acc() {
-    return !this.faling() && !this.jumping() ? config.acc : config.lowAcc;
+    return !this.fallingDown() && !this.jumping() ? config.acc : config.lowAcc;
+  }
+
+  private run() {
+    this.speed = config.maxSpeed;
+  }
+
+  private walk() {
+    this.speed = config.speed;
   }
 
   private move() {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
-    if (this.movingR())
-      this.velocity.x = Math.min(this.velocity.x + this.acc(), config.maxSpeed);
-    else if (this.movingL())
-      this.velocity.x = Math.max(this.velocity.x - this.acc(), -config.maxSpeed);
-    else if (!this.jumpCount) this.velocity.x = 0;
+    if (this.movingR()) {
+      this.velocity.x = Math.min(this.velocity.x + this.acc(), this.speed);
+    } else if (this.movingL()) {
+      this.velocity.x = Math.max(this.velocity.x - this.acc(), -this.speed); 
+    } else if (this.crouched()) {
+      this.velocity.x = Math.max(Math.abs(this.velocity.x) - config.lowAcc, 0) * (this.velocity.x > 0 ? 1 : -1);
+    } else if (!this.jumping()) this.velocity.x = 0;
   }
 
   private jump() {
-    if (this.jumpCount >= config.jumps) return;
+    if (this.jumpCount >= config.jumps || this.crouched()) return;
 
     this.jumpCount++;
     this.velocity.y = -10;
@@ -97,8 +116,21 @@ export default class Player extends Entity {
 
     this.jumpCount = 0;
 
-    if (this.running()) this.sprite.set('run');
+    if (this.crouched()) this.sprite.set('crouch');
+    else if (this.moving()) this.sprite.set('run');
     else this.sprite.set('idle');
+  }
+
+  private crouch() {
+    this.sprite.set('crouch');
+    this.height = config.crouchedHeight;
+    this.position.y += config.height - config.crouchedHeight;
+  }
+
+  private standUp() {
+    this.sprite.set('idle');
+    this.height = config.height;
+    this.position.y -= config.height - config.crouchedHeight;
   }
 
   public listen(keyboard: Keyboard) {
@@ -108,28 +140,35 @@ export default class Player extends Entity {
     keyboard.onDown(' ', () => this.jump());
 
     keyboard.onDown('d', () => {
+      keyboard.bulkRelease('a', 's');
       this.sprite.revertX();
-      
-      if (!this.jumping()) {
-        this.sprite.set('run');
-      }
+      this.sprite.translate('idle', 'run');
     });
 
     keyboard.onUp('d', () => {
-      !this.movingL() && !this.jumping() && this.sprite.set('idle');
+      this.sprite.translate('run', 'idle');
     });
 
     keyboard.onDown('a', () => {
+      keyboard.bulkRelease('d', 's');
       this.sprite.invertX();
-
-      if (!this.jumping()) {
-        this.sprite.set('run');
-      }
+      this.sprite.translate('idle', 'run');
     });
 
-    keyboard.onUp('a', () => {
-      !this.movingR() && !this.jumping() && this.sprite.set('idle');
+    keyboard.onUp( 'a', () => {
+      this.sprite.translate('run', 'idle');
     });
+
+    keyboard.onDown('s', () => {
+      keyboard.bulkRelease('a', 'd');
+      this.crouch();
+    });
+
+    keyboard.onUp('s', () => this.standUp());
+
+    keyboard.onDown('shift', () => this.run());
+
+    keyboard.onUp('shift', () => this.walk());
   }
 
   public draw(context: CanvasRenderingContext2D) {

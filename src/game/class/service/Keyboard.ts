@@ -11,33 +11,52 @@ export default class Keyboard {
 
     window.addEventListener(
       'keyup',
-      (event) => !event.repeat && this.release(event.key)
+      (event) => this.release(event.key)
     );
   }
 
   public press = (key: string) => {
-    this.downEvents.get(key.toLowerCase())?.forEach(async (event) => event());
-    this.keys.set(key.toLowerCase(), true);
+    const treatedKey = key.toLowerCase();
+
+    if (this.pressed(treatedKey)) return;
+
+    this.downEvents.get(treatedKey)?.forEach(async (event) => event());
+    this.keys.set(treatedKey, true);
+  };
+
+  public bulkPress = (...keys: string[]) => {
+    keys.forEach((key) => this.press(key));
   };
 
   public release = (key: string) => {
-    this.upEvents.get(key.toLowerCase())?.forEach(async (event) => event());
-    this.keys.set(key.toLowerCase(), false);
+    const treatedKey = key.toLowerCase();
+
+    if (!this.pressed(treatedKey)) return;
+
+    this.upEvents.get(treatedKey)?.forEach(async (event) => event());
+    this.keys.set(treatedKey, false);
+  };
+
+  public bulkRelease = (...keys: string[]) => {
+    keys.forEach((key) => this.release(key));
   };
 
   public pressed = (key: string) => {
-    return this.keys.get(key) || false;
+    const treatedKey = key.toLowerCase();
+    return this.keys.get(treatedKey) || false;
   };
 
   public onDown = (key: string, event: () => void) => {
-    const events = this.downEvents.get(key) || [];
+    const treatedKey = key.toLowerCase();
+    const events = this.downEvents.get(treatedKey) || [];
     events.push(event);
-    this.downEvents.set(key, events);
+    this.downEvents.set(treatedKey, events);
   };
 
   public onUp = (key: string, event: () => void) => {
-    const events = this.upEvents.get(key) || [];
+    const treatedKey = key.toLowerCase();
+    const events = this.upEvents.get(treatedKey) || [];
     events.push(event);
-    this.upEvents.set(key, events);
+    this.upEvents.set(treatedKey, events);
   };
 }

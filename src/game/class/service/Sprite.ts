@@ -74,7 +74,8 @@ export class Animation {
 export default class Sprite {
   private image: HTMLImageElement;
   private slices: Map<string, Animation | Slice>;
-  private selected: Animation | Slice | null = null;
+  private selected?: Animation | Slice;
+  private selectedName?: string;
   private xAxis = 1;
   private yAxis = 1;
 
@@ -85,6 +86,14 @@ export default class Sprite {
 
     this.slices = new Map();
     this.image = image;
+  }
+
+  public invertX() {
+    this.xAxis = -1;
+  }
+
+  public revertX() {
+    this.xAxis = 1;
   }
 
   public create(name: string, slices: Coordinates[], { loop = true } = {}) {
@@ -98,16 +107,19 @@ export default class Sprite {
     if (!selected) return;
 
     this.selected = selected;
+    this.selectedName = name;
 
     if (selected instanceof Animation) selected.reset();
   }
 
-  public invertX() {
-    this.xAxis = -1;
-  }
+  public translate(from: string | string[], to: string) {
+    if (!this.selectedName) return this.set(to);
+  
+    if (typeof from === 'string') {
+      if (this.selectedName !== from) return;
+    } else if (!from.includes(this.selectedName)) return;
 
-  public revertX() {
-    this.xAxis = 1;
+    this.set(to);
   }
 
   public draw(
@@ -121,14 +133,7 @@ export default class Sprite {
     context.translate(this.xAxis === 1 ? 0 : dw, 0);
     context.scale(this.xAxis, 1);
 
-    this.selected?.draw(
-      context,
-      this.image,
-      dx * this.xAxis,
-      dy,
-      dw,
-      dh
-    );
+    this.selected?.draw(context, this.image, dx * this.xAxis, dy, dw, dh);
 
     context.restore();
   }

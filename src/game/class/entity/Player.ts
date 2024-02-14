@@ -7,17 +7,23 @@ import Sprite from '../service/Sprite';
 
 export const id = 'p';
 
+const config = {
+  maxSpeed: 5,
+  lowAcc: 0.1,
+  acc: 1.5,
+  jumps: 2,
+  width: settings.tileWidth / 2,
+  height: settings.tileHeight,
+};
+
 export default class Player extends Entity {
   private sprite = new Sprite('data/sprites/player.png');
-  private maxSpeed = 5;
-  private speed = 1.5;
-  private jumps = 2;
   private jumpCount = 0;
   private movingR = () => false;
   private movingL = () => false;
 
   constructor(position: Position) {
-    super(position, settings.tileWidth / 2, settings.tileHeight);
+    super(position, config.width, config.height);
 
     this.sprite.create('idle', [[56, 15, 28, 47]]);
 
@@ -51,57 +57,79 @@ export default class Player extends Entity {
     super.onBottomCollisionRect(rect);
   }
 
+  private running() {
+    return this.movingL() || this.movingR();
+  }
+
+  private jumping() {
+    return this.jumpCount > 0;
+  }
+
+  private faling() {
+    return this.velocity.y > 0;
+  }
+
+  private acc() {
+    return !this.faling() && !this.jumping() ? config.acc : config.lowAcc;
+  }
+
   private move() {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
     if (this.movingR())
-      this.velocity.x = Math.min(this.velocity.x + this.speed, this.maxSpeed);
+      this.velocity.x = Math.min(this.velocity.x + this.acc(), config.maxSpeed);
     else if (this.movingL())
-      this.velocity.x = Math.max(this.velocity.x - this.speed, -this.maxSpeed);
+      this.velocity.x = Math.max(this.velocity.x - this.acc(), -config.maxSpeed);
     else if (!this.jumpCount) this.velocity.x = 0;
   }
 
   private jump() {
-    if (this.jumpCount >= this.jumps) return;
+    if (this.jumpCount >= config.jumps) return;
 
     this.jumpCount++;
-    this.speed = 0.1;
     this.velocity.y = -10;
-
     this.sprite.set('jump');
   }
 
   public resetJump() {
-    if (!this.jumpCount) return;
+    if (!this.jumping()) return;
 
     this.jumpCount = 0;
-    this.speed = 1.5;
 
-    if (this.movingL()) this.sprite.set('run');
-    else if (this.movingR()) this.sprite.set('run');
+    if (this.running()) this.sprite.set('run');
     else this.sprite.set('idle');
   }
 
   public listen(keyboard: Keyboard) {
+    this.movingR = () => keyboard.pressed('d');
+    this.movingL = () => keyboard.pressed('a');
+
     keyboard.onDown(' ', () => this.jump());
 
     keyboard.onDown('d', () => {
-      this.sprite.set('run');
       this.sprite.revertX();
+      
+      if (!this.jumping()) {
+        this.sprite.set('run');
+      }
     });
 
-    keyboard.onUp('d', () => this.sprite.set('idle'));
+    keyboard.onUp('d', () => {
+      !this.movingL() && !this.jumping() && this.sprite.set('idle');
+    });
 
     keyboard.onDown('a', () => {
-      this.sprite.set('run');
       this.sprite.invertX();
+
+      if (!this.jumping()) {
+        this.sprite.set('run');
+      }
     });
 
-    keyboard.onUp('a', () => this.sprite.set('idle'));
-
-    this.movingR = () => keyboard.pressed('d');
-    this.movingL = () => keyboard.pressed('a');
+    keyboard.onUp('a', () => {
+      !this.movingR() && !this.jumping() && this.sprite.set('idle');
+    });
   }
 
   public draw(context: CanvasRenderingContext2D) {

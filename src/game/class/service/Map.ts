@@ -1,14 +1,17 @@
 import settings from '../../settings';
 import platformers from '../platformer';
+import entities from '../entity';
 import Rectangle from '../object/Rectangle';
 import Player, { id as PLAYER_ID } from '../entity/Player';
 import maps from '../../data/maps';
+import RectEntity from '../object/RectEntity';
 
 export type MapData = string[][];
 
 export default class Map {
   private i = 0;
   public blocks: Rectangle[] = [];
+  public monsters: RectEntity[] = [];
   public player!: Player;
   public width: number;
   public height: number;
@@ -50,14 +53,15 @@ export default class Map {
         const y = (i - 1) * settings.tileHeight;
         const position = { x, y };
 
-        if (tile === PLAYER_ID) this.player = new Player(position);
-        else {
-          const Block = platformers[tile];
+        if (tile === PLAYER_ID) return this.player = new Player(position);
+      
+        const Block = platformers[tile];
 
-          if (!Block) throw new Error(`Invalid block type: ${tile}`);
+        if (Block) return this.blocks.push(new Block(position));
 
-          this.blocks.push(new Block(position));
-        }
+        const Monster = entities[tile];
+
+        if (Monster) return this.monsters.push(new Monster(position));   
       });
     });
 

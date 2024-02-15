@@ -1,4 +1,4 @@
-export type Coordinates = [number, number, number, number, number?];
+export type Coordinates = [number, number, number, number, number?, (() => void)?];
 
 export class Slice {
   constructor(
@@ -6,8 +6,9 @@ export class Slice {
     private sy: number,
     private sw: number,
     private sh: number,
-    public duration: number = 1
-  ) {}
+    public duration: number = 5,
+    public callback: () => void = () => {}
+  ) { }
 
   public draw(
     context: CanvasRenderingContext2D,
@@ -31,25 +32,42 @@ export class Slice {
   }
 }
 
+interface AnimationArgs {
+  loop: boolean;
+  interval: number;
+}
+
 export class Animation {
   private slices: Slice[] = [];
-  private loop: boolean;
   private frame = 0;
   private tick = 0;
+  private loop = true;
 
   get current() {
     return this.slices[this.frame];
   }
 
-  constructor(slices: Coordinates[], loop: boolean) {
-    this.slices = slices.map((slice) => new Slice(...slice));
+  constructor(slices: Coordinates[], { loop, interval }: AnimationArgs) {
+    this.slices = slices.map((
+      [sx, sy, sw, sh, duration, callback]
+    ) => new Slice(
+      sx,
+      sy,
+      sw,
+      sh,
+      duration || interval,
+      callback
+    ));
+
     this.loop = loop;
   }
 
   public next() {
+    this.current.callback();
+
     if (this.loop) this.frame = (this.frame + 1) % this.slices.length;
     else this.frame = Math.min(this.frame + 1, this.slices.length - 1);
-
+    
     this.tick = 0;
   }
 
@@ -67,7 +85,7 @@ export class Animation {
     dh: number
   ) {
     this.current.draw(context, image, dx, dy, dw, dh);
-    this.tick++ > this.current.duration && this.next();
+    ++this.tick >= this.current.duration && this.next();
   }
 }
 
@@ -96,13 +114,13 @@ export default class Sprite {
     this.xAxis = 1;
   }
 
-  public make(slices: Coordinates[], { loop = true } = {}) {
-    if (slices.length > 1) return this.selected = new Animation(slices, loop);
-    return this.selected = new Slice(...slices[0]);
+  public make(slices: Coordinates[], args: AnimationArgs) {
+    if (slices.length > 1) return (this.selected = new Animation(slices, args));
+    return (this.selected = new Slice(...slices[0]));
   }
 
-  public create(name: string, slices: Coordinates[], { loop = true } = {}) {
-    if (slices.length > 1) this.slices.set(name, new Animation(slices, loop));
+  public create(name: string, slices: Coordinates[], args: AnimationArgs) {
+    if (slices.length > 1) this.slices.set(name, new Animation(slices, args));
     else this.slices.set(name, new Slice(...slices[0]));
   }
 
@@ -119,7 +137,7 @@ export default class Sprite {
 
   public translate(from: string | string[], to: string) {
     if (!this.selectedName) return this.set(to);
-  
+
     if (typeof from === 'string') {
       if (this.selectedName !== from) return;
     } else if (!from.includes(this.selectedName)) return;

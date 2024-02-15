@@ -42,8 +42,6 @@ export default class Map {
   }
 
   private parse(data: MapData) {
-    console.log(data);
-
     data.forEach((row, i) => {
       row.forEach((tile, j) => {
         if (tile === '-') return;
@@ -52,13 +50,13 @@ export default class Map {
         const y = (i - 1) * settings.tileHeight;
         const position = { x, y };
 
-        if (tile === PLAYER_ID) this.player = new Player(position, this.sprain);
+        if (tile === PLAYER_ID) this.player = new Player(position);
         else {
           const Block = platformers[tile];
 
           if (!Block) throw new Error(`Invalid block type: ${tile}`);
 
-          this.blocks.push(new Block(position, this.sprain));
+          this.blocks.push(new Block(position));
         }
       });
     });
@@ -66,5 +64,14 @@ export default class Map {
     if (!this.player) {
       throw new Error('No player found');
     }
+  }
+
+  public clear(context: CanvasRenderingContext2D) {
+    context.clearRect(
+      this.sprain.x,
+      this.sprain.y,
+      settings.width + this.sprain.x,
+      settings.height + this.sprain.y
+    );
   }
 }

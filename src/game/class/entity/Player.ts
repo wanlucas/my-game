@@ -1,6 +1,6 @@
 import Entity from '../object/RectEntity';
 import settings from '../../settings';
-import { Position, Sprain } from '../object/GameObject';
+import { Position } from '../object/GameObject';
 import Keyboard from '../service/Keyboard';
 import Rectangle from '../object/Rectangle';
 import Sprite from '../service/Sprite';
@@ -31,10 +31,9 @@ export default class Player extends Entity {
   private jumpCount = 0;
   private speed = config.speed;
 
-  constructor(position: Position, sprain: Sprain) {
+  constructor(position: Position) {
     super(
       position,
-      sprain, 
       config.width, 
       config.height, 
       new Sprite('data/sprites/player.png')
@@ -103,8 +102,8 @@ export default class Player extends Entity {
   }
 
   private move() {
-    this.incrementX(this.velocity.x);
-    this.incrementY(this.velocity.y);
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
 
     if (this.movingR()) {
       this.velocity.x = Math.min(this.velocity.x + this.acc(), this.speed);
@@ -136,13 +135,13 @@ export default class Player extends Entity {
   private crouch() {
     this.sprite.set(PlayerSprites.Crouch);
     this.height = config.crouchedHeight;
-    this.incrementY(config.height - config.crouchedHeight);
+    this.position.y += config.height - config.crouchedHeight;
   }
 
   private standUp() {
     this.sprite.set(PlayerSprites.Idle);
     this.height = config.height;
-    this.decrementY(config.height - config.crouchedHeight);
+    this.position.y -= config.height - config.crouchedHeight;
   }
 
   public listen(keyboard: Keyboard) {

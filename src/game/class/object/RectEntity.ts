@@ -1,5 +1,5 @@
 import Sprite from '../service/Sprite';
-import { Position, Sprain } from './GameObject';
+import { Position } from './GameObject';
 import Rectangle from './Rectangle';
 
 export interface Velocity {
@@ -12,12 +12,11 @@ export default class RectEntity extends Rectangle {
 
   constructor(
     position: Position,
-    sprain: Sprain,
     width: number,
     height: number,
     sprite: Sprite
   ) {
-    super(position, sprain, width, height, sprite);
+    super(position, width, height, sprite);
 
     this.velocity = {
       x: 0,
@@ -27,12 +26,12 @@ export default class RectEntity extends Rectangle {
 
   protected onTopCollisionRect(rect: Rectangle) {
     this.velocity.y = 0;
-    this.setY(rect.position.y + rect.height);
+    this.position.y = rect.position.y + rect.height;
   }
 
   protected onBottomCollisionRect(rect: Rectangle) {
     this.velocity.y = 0;
-    this.setY(rect.position.y - this.height);
+    this.position.y = rect.position.y - this.height;
   }
 
   public onYRectCollision(rect: Rectangle) {
@@ -44,8 +43,16 @@ export default class RectEntity extends Rectangle {
     this.velocity.x = 0;
 
     if (this.position.x > rect.position.x) {
-      this.setX(rect.position.x + rect.width);
-    } else this.setX(rect.position.x - this.width);
+      this.position.x = rect.position.x + rect.width;
+    } else this.position.x = rect.position.x - this.width;
+  }
+
+  public leftCollisionWithBoundary(x: number) {
+    return this.position.x + this.velocity.x < x;
+  }
+
+  public rightCollisionWithBoundary(x: number) {
+    return this.position.x + this.velocity.x + this.width > x;
   }
 
   public xCollisionWithRect(block: Rectangle) {

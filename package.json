@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "build:client": "webpack --config webpack.config.js",
-    "dev": "nodemon src/server.ts"
+    "dev": "nodemon src/server.ts",
+    "watch": "npx watch 'npm run build:client' './src' --wait 1"
   },
   "author": "Wan Lucas",
   "license": "ISC",

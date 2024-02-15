@@ -1,5 +1,5 @@
 import Sprite from '../service/Sprite';
-import { Position } from './GameObject';
+import { Position, Sprain } from './GameObject';
 import Rectangle from './Rectangle';
 
 export interface Velocity {
@@ -10,8 +10,14 @@ export interface Velocity {
 export default class RectEntity extends Rectangle {
   velocity: Velocity;
 
-  constructor(position: Position, width: number, height: number, sprite: Sprite) {
-    super(position, width, height, sprite);
+  constructor(
+    position: Position,
+    sprain: Sprain,
+    width: number,
+    height: number,
+    sprite: Sprite
+  ) {
+    super(position, sprain, width, height, sprite);
 
     this.velocity = {
       x: 0,
@@ -21,12 +27,12 @@ export default class RectEntity extends Rectangle {
 
   protected onTopCollisionRect(rect: Rectangle) {
     this.velocity.y = 0;
-    this.position.y = rect.position.y + rect.height;
+    this.setY(rect.position.y + rect.height);
   }
 
   protected onBottomCollisionRect(rect: Rectangle) {
     this.velocity.y = 0;
-    this.position.y = rect.position.y - this.height;
+    this.setY(rect.position.y - this.height);
   }
 
   public onYRectCollision(rect: Rectangle) {
@@ -36,45 +42,49 @@ export default class RectEntity extends Rectangle {
 
   public onXRectCollision(rect: Rectangle) {
     this.velocity.x = 0;
-    
+
     if (this.position.x > rect.position.x) {
-      this.position.x = rect.position.x + rect.width;
-    } else this.position.x = rect.position.x - this.width;
-  }  
+      this.setX(rect.position.x + rect.width);
+    } else this.setX(rect.position.x - this.width);
+  }
 
   public xCollisionWithRect(block: Rectangle) {
     return (
-      this.position.x + this.velocity.x + this.width > block.position.x
-      && this.position.x + this.velocity.x < block.position.x + block.width
-      && this.position.y + this.height > block.position.y
-      && this.position.y < block.position.y + block.height
+      this.position.x + this.velocity.x + this.width > block.position.x &&
+      this.position.x + this.velocity.x < block.position.x + block.width &&
+      this.position.y + this.height > block.position.y &&
+      this.position.y < block.position.y + block.height
     );
   }
 
   public yCollisionWithRect(block: Rectangle) {
     return (
-      this.position.y + this.velocity.y + this.height > block.position.y
-      && this.position.y + this.velocity.y < block.position.y + block.height
-      && this.position.x + this.width > block.position.x
-      && this.position.x < block.position.x + block.width
+      this.position.y + this.velocity.y + this.height > block.position.y &&
+      this.position.y + this.velocity.y < block.position.y + block.height &&
+      this.position.x + this.width > block.position.x &&
+      this.position.x < block.position.x + block.width
     );
   }
 
   public xCollisionWithRectEntity(entity: RectEntity) {
     return (
-      this.position.x + this.velocity.x + this.width > entity.position.x + entity.velocity.x
-      && this.position.x + this.velocity.x < entity.position.x + entity.velocity.x + entity.width
-      && this.position.y + this.height > entity.position.y
-      && this.position.y < entity.position.y + entity.height
+      this.position.x + this.velocity.x + this.width >
+        entity.position.x + entity.velocity.x &&
+      this.position.x + this.velocity.x <
+        entity.position.x + entity.velocity.x + entity.width &&
+      this.position.y + this.height > entity.position.y &&
+      this.position.y < entity.position.y + entity.height
     );
   }
 
   public yCollisionWithRectEntity(entity: RectEntity) {
     return (
-      this.position.y + this.velocity.y + this.height > entity.position.y + entity.velocity.y
-      && this.position.y + this.velocity.y < entity.position.y + entity.velocity.y + entity.height
-      && this.position.x + this.width > entity.position.x
-      && this.position.x < entity.position.x + entity.width
+      this.position.y + this.velocity.y + this.height >
+        entity.position.y + entity.velocity.y &&
+      this.position.y + this.velocity.y <
+        entity.position.y + entity.velocity.y + entity.height &&
+      this.position.x + this.width > entity.position.x &&
+      this.position.x < entity.position.x + entity.width
     );
   }
 }

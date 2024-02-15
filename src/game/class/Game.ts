@@ -1,3 +1,4 @@
+import settings from '../settings';
 import Keyboard from './service/Keyboard';
 import Map from './service/Map';
 
@@ -33,6 +34,10 @@ export default class Game {
     this.map.player.update();
 
     this.map.player.velocity.y += 0.5;
+
+    if (this.map.player.position.x > this.width / 3 && this.map.player.velocity.x > 0) {
+      this.map.offsetX(this.map.player.velocity.x);
+    }
   }
 
   public loop() {

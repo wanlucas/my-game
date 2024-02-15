@@ -1,14 +1,15 @@
 import Sprite from '../service/Sprite';
-import GameObject, { Position } from './GameObject';
+import GameObject, { Position, Sprain } from './GameObject';
 
 export default class Rectangle extends GameObject {
   constructor(
     position: Position,
+    sprain: Sprain,
     public width: number,
     public height: number,
     protected sprite: Sprite,
   ) { 
-    super(position);
+    super(position, sprain);
   }
 
   public draw(context: CanvasRenderingContext2D) {

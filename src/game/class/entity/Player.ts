@@ -7,7 +7,7 @@ import Sprite from '../service/Sprite';
 
 export const id = 'p';
 
-enum PlayerSprites {
+enum PlayerSprite {
   Idle = 'idle',
   Run = 'run',
   Jump = 'jump',
@@ -34,38 +34,40 @@ export default class Player extends Entity {
   constructor(position: Position) {
     super(
       position,
-      config.width, 
-      config.height, 
+      config.width,
+      config.height,
       new Sprite('data/sprites/player.png')
     );
 
-    this.sprite.create(PlayerSprites.Idle, [[56, 15, 28, 47]]);
+    this.sprite.create(PlayerSprite.Idle, [[56, 15, 28, 47]]);
 
     this.sprite.create(
       'run',
       [
-        [88, 15, 28, 47, 3],
-        [121, 15, 28, 47, 3],
-        [154, 15, 28, 47, 3],
-        [183, 15, 28, 47, 3],
-        [219, 15, 28, 47, 3],
-        [154, 15, 28, 47, 3],
-      ],
-      { loop: true }
-    );
+        [88, 15, 28, 47],
+        [121, 15, 28, 47],
+        [154, 15, 28, 47],
+        [183, 15, 28, 47],
+        [219, 15, 28, 47],
+        [154, 15, 28, 47],
+      ], {
+        loop: true,
+        interval: 3,
+      });
 
     this.sprite.create(
       'jump',
       [
-        [190, 128, 28, 47, 30],
-        [270, 128, 28, 47, 30],
-      ],
-      { loop: false }
-    );
+        [190, 128, 28, 47],
+        [270, 128, 28, 47],
+      ], {
+        loop: false, 
+        interval: 30 
+      });
 
-    this.sprite.create(PlayerSprites.Crouch, [[540, 136, 28, 28]]);
+    this.sprite.create(PlayerSprite.Crouch, [[540, 136, 28, 28]]);
 
-    this.sprite.set(PlayerSprites.Idle);
+    this.sprite.set(PlayerSprite.Idle);
   }
 
   protected onBottomCollisionRect(rect: Rectangle) {
@@ -102,15 +104,14 @@ export default class Player extends Entity {
   }
 
   private move() {
-    this.position.x += this.velocity.x;
-    this.position.y += this.velocity.y;
-
     if (this.movingR()) {
       this.velocity.x = Math.min(this.velocity.x + this.acc(), this.speed);
     } else if (this.movingL()) {
-      this.velocity.x = Math.max(this.velocity.x - this.acc(), -this.speed); 
+      this.velocity.x = Math.max(this.velocity.x - this.acc(), -this.speed);
     } else if (this.crouched()) {
-      this.velocity.x = Math.max(Math.abs(this.velocity.x) - config.lowAcc, 0) * (this.velocity.x > 0 ? 1 : -1);
+      this.velocity.x =
+        Math.max(Math.abs(this.velocity.x) - config.lowAcc, 0) *
+        (this.velocity.x > 0 ? 1 : -1);
     } else if (!this.jumping()) this.velocity.x = 0;
   }
 
@@ -127,19 +128,19 @@ export default class Player extends Entity {
 
     this.jumpCount = 0;
 
-    if (this.crouched()) this.sprite.set(PlayerSprites.Crouch);
-    else if (this.moving()) this.sprite.set(PlayerSprites.Run);
-    else this.sprite.set(PlayerSprites.Idle);
+    if (this.crouched()) this.sprite.set(PlayerSprite.Crouch);
+    else if (this.moving()) this.sprite.set(PlayerSprite.Run);
+    else this.sprite.set(PlayerSprite.Idle);
   }
 
   private crouch() {
-    this.sprite.set(PlayerSprites.Crouch);
+    this.sprite.set(PlayerSprite.Crouch);
     this.height = config.crouchedHeight;
     this.position.y += config.height - config.crouchedHeight;
   }
 
   private standUp() {
-    this.sprite.set(PlayerSprites.Idle);
+    this.sprite.set(PlayerSprite.Idle);
     this.height = config.height;
     this.position.y -= config.height - config.crouchedHeight;
   }
@@ -153,21 +154,21 @@ export default class Player extends Entity {
     keyboard.onDown('d', () => {
       keyboard.bulkRelease('a', 's');
       this.sprite.revertX();
-      this.sprite.translate(PlayerSprites.Idle, PlayerSprites.Run);
+      this.sprite.translate(PlayerSprite.Idle, PlayerSprite.Run);
     });
 
     keyboard.onUp('d', () => {
-      this.sprite.translate(PlayerSprites.Run, PlayerSprites.Idle);
+      this.sprite.translate(PlayerSprite.Run, PlayerSprite.Idle);
     });
 
     keyboard.onDown('a', () => {
       keyboard.bulkRelease('d', 's');
       this.sprite.invertX();
-      this.sprite.translate(PlayerSprites.Idle, PlayerSprites.Run);
+      this.sprite.translate(PlayerSprite.Idle, PlayerSprite.Run);
     });
 
-    keyboard.onUp( 'a', () => {
-      this.sprite.translate(PlayerSprites.Run, PlayerSprites.Idle);
+    keyboard.onUp('a', () => {
+      this.sprite.translate(PlayerSprite.Run, PlayerSprite.Idle);
     });
 
     keyboard.onDown('s', () => {
@@ -182,7 +183,8 @@ export default class Player extends Entity {
     keyboard.onUp('shift', () => this.walk());
   }
 
-  public update() {
+  public update(context: CanvasRenderingContext2D) {
+    super.update(context);
     this.move();
   }
 }

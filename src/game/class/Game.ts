@@ -11,16 +11,18 @@ export default class Game {
     private readonly height: number
   ) {
     this.map.player.listen(this.keyboard);
-  }
 
-  public draw() {
-    this.map.clear(this.context);
-    this.map.blocks.forEach((block) => block.draw(this.context));
-    this.map.player.draw(this.context);
+    this.map.monsters.forEach((monster) => {
+      monster.listen && monster.listen!(this.keyboard);
+    });
   }
 
   public update() {
+    this.map.clear(this.context);
+
     this.map.blocks.forEach((block) => {
+      block.update(this.context);
+
       if (this.map.player.xCollisionWithRect(block)) {
         this.map.player.onXRectCollision(block);
       }
@@ -28,11 +30,23 @@ export default class Game {
       if (this.map.player.yCollisionWithRect(block)) {
         this.map.player.onYRectCollision(block);
       }
+
+      this.map.monsters.forEach((monster) => {
+        if (monster.xCollisionWithRect(block)) {
+          monster.onXRectCollision(block);
+        }
+
+        if (monster.yCollisionWithRect(block)) {
+          monster.onYRectCollision(block);
+        }
+      });
     });
 
-    this.map.player.update();
+    this.map.monsters.forEach((monster) => {
+      monster.update(this.context);
+    });
 
-    this.map.player.velocity.y += 0.5;
+    this.map.player.update(this.context);
 
     if (this.map.player.leftCollisionWithBoundary(this.map.sprain.x)) {
       this.map.player.velocity.x = 0;
@@ -54,7 +68,6 @@ export default class Game {
   public loop() {
     setInterval(() => {
       this.update();
-      this.draw();
     }, 1000 / 60);
   }
 

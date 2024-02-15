@@ -21,4 +21,7 @@ export default class Rectangle extends GameObject {
     );
   }
 
+  public update(context: CanvasRenderingContext2D) {
+    this.draw(context);
+  }
 }

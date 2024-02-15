@@ -94,4 +94,12 @@ export default class RectEntity extends Rectangle {
       this.position.x < entity.position.x + entity.width
     );
   }
+
+  public update(context: CanvasRenderingContext2D) {
+    super.update(context);
+    
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
+    this.velocity.y += 0.5;
+  }
 }

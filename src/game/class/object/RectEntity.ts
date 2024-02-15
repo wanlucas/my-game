@@ -1,3 +1,4 @@
+import Sprite from '../service/Sprite';
 import { Position } from './GameObject';
 import Rectangle from './Rectangle';
 
@@ -9,8 +10,8 @@ export interface Velocity {
 export default class RectEntity extends Rectangle {
   velocity: Velocity;
 
-  constructor(position: Position, width: number, height: number) {
-    super(position, width, height);
+  constructor(position: Position, width: number, height: number, sprite: Sprite) {
+    super(position, width, height, sprite);
 
     this.velocity = {
       x: 0,

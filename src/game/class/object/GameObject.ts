@@ -6,5 +6,5 @@ export interface Position {
 export default class GameObject {
   constructor(
     public position: Position,
-  ) {}
+  ) { }
 }

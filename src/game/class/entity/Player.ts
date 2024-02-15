@@ -7,6 +7,13 @@ import Sprite from '../service/Sprite';
 
 export const id = 'p';
 
+enum PlayerSprites {
+  Idle = 'idle',
+  Run = 'run',
+  Jump = 'jump',
+  Crouch = 'crouch',
+}
+
 const config = {
   speed: 4,
   maxSpeed: 8,
@@ -19,16 +26,20 @@ const config = {
 };
 
 export default class Player extends Entity {
-  private sprite = new Sprite('data/sprites/player.png');
   private movingR = () => false;
   private movingL = () => false;
   private jumpCount = 0;
   private speed = config.speed;
 
   constructor(position: Position) {
-    super(position, config.width, config.height);
+    super(
+      position, 
+      config.width, 
+      config.height, 
+      new Sprite('data/sprites/player.png')
+    );
 
-    this.sprite.create('idle', [[56, 15, 28, 47]]);
+    this.sprite.create(PlayerSprites.Idle, [[56, 15, 28, 47]]);
 
     this.sprite.create(
       'run',
@@ -52,9 +63,9 @@ export default class Player extends Entity {
       { loop: false }
     );
 
-    this.sprite.create('crouch', [[540, 136, 28, 28]]);
+    this.sprite.create(PlayerSprites.Crouch, [[540, 136, 28, 28]]);
 
-    this.sprite.set('idle');
+    this.sprite.set(PlayerSprites.Idle);
   }
 
   protected onBottomCollisionRect(rect: Rectangle) {
@@ -116,19 +127,19 @@ export default class Player extends Entity {
 
     this.jumpCount = 0;
 
-    if (this.crouched()) this.sprite.set('crouch');
-    else if (this.moving()) this.sprite.set('run');
-    else this.sprite.set('idle');
+    if (this.crouched()) this.sprite.set(PlayerSprites.Crouch);
+    else if (this.moving()) this.sprite.set(PlayerSprites.Run);
+    else this.sprite.set(PlayerSprites.Idle);
   }
 
   private crouch() {
-    this.sprite.set('crouch');
+    this.sprite.set(PlayerSprites.Crouch);
     this.height = config.crouchedHeight;
     this.position.y += config.height - config.crouchedHeight;
   }
 
   private standUp() {
-    this.sprite.set('idle');
+    this.sprite.set(PlayerSprites.Idle);
     this.height = config.height;
     this.position.y -= config.height - config.crouchedHeight;
   }
@@ -142,21 +153,21 @@ export default class Player extends Entity {
     keyboard.onDown('d', () => {
       keyboard.bulkRelease('a', 's');
       this.sprite.revertX();
-      this.sprite.translate('idle', 'run');
+      this.sprite.translate(PlayerSprites.Idle, PlayerSprites.Run);
     });
 
     keyboard.onUp('d', () => {
-      this.sprite.translate('run', 'idle');
+      this.sprite.translate(PlayerSprites.Run, PlayerSprites.Idle);
     });
 
     keyboard.onDown('a', () => {
       keyboard.bulkRelease('d', 's');
       this.sprite.invertX();
-      this.sprite.translate('idle', 'run');
+      this.sprite.translate(PlayerSprites.Idle, PlayerSprites.Run);
     });
 
     keyboard.onUp( 'a', () => {
-      this.sprite.translate('run', 'idle');
+      this.sprite.translate(PlayerSprites.Run, PlayerSprites.Idle);
     });
 
     keyboard.onDown('s', () => {
@@ -169,16 +180,6 @@ export default class Player extends Entity {
     keyboard.onDown('shift', () => this.run());
 
     keyboard.onUp('shift', () => this.walk());
-  }
-
-  public draw(context: CanvasRenderingContext2D) {
-    this.sprite.draw(
-      context,
-      this.position.x,
-      this.position.y,
-      this.width,
-      this.height
-    );
   }
 
   public update() {

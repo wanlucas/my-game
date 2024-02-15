@@ -1,3 +1,4 @@
+import Sprite from '../service/Sprite';
 import GameObject, { Position } from './GameObject';
 
 export default class Rectangle extends GameObject {
@@ -5,12 +6,19 @@ export default class Rectangle extends GameObject {
     position: Position,
     public width: number,
     public height: number,
+    protected sprite: Sprite,
   ) { 
     super(position);
   }
 
   public draw(context: CanvasRenderingContext2D) {
-    context.fillStyle = 'green';
-    context.fillRect(this.position.x, this.position.y, this.width, this.height);
+    this.sprite.draw(
+      context,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
   }
+
 }

@@ -1,4 +1,4 @@
-type Coordinates = [number, number, number, number, number?];
+export type Coordinates = [number, number, number, number, number?];
 
 export class Slice {
   constructor(
@@ -96,6 +96,11 @@ export default class Sprite {
     this.xAxis = 1;
   }
 
+  public make(slices: Coordinates[], { loop = true } = {}) {
+    if (slices.length > 1) return this.selected = new Animation(slices, loop);
+    return this.selected = new Slice(...slices[0]);
+  }
+
   public create(name: string, slices: Coordinates[], { loop = true } = {}) {
     if (slices.length > 1) this.slices.set(name, new Animation(slices, loop));
     else this.slices.set(name, new Slice(...slices[0]));
@@ -133,8 +138,19 @@ export default class Sprite {
     context.translate(this.xAxis === 1 ? 0 : dw, 0);
     context.scale(this.xAxis, 1);
 
-    this.selected?.draw(context, this.image, dx * this.xAxis, dy, dw, dh);
+    this.selected!.draw(context, this.image, dx * this.xAxis, dy, dw, dh);
 
     context.restore();
+  }
+
+  public drawSlice(
+    name: string,
+    context: CanvasRenderingContext2D,
+    dx: number,
+    dy: number,
+    dw: number,
+    dh: number
+  ) {
+    this.slices.get(name)!.draw(context, this.image, dx, dy, dw, dh);
   }
 }

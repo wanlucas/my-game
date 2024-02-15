@@ -1,3 +1,4 @@
+import './load';
 import Game from './class/Game';
 import settings from './settings';
 

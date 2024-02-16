@@ -1,3 +1,6 @@
+import Player from './entity/Player';
+import GameObject from './object/GameObject';
+import Monster from './object/Monster';
 import Keyboard from './service/Keyboard';
 import Map from './service/Map';
 
@@ -10,9 +13,9 @@ export default class Game {
     private readonly width: number,
     private readonly height: number
   ) {
-    this.map.player.listen(this.keyboard);
+    Player.instance.listen(this.keyboard);
 
-    this.map.monsters.forEach((monster) => {
+    Monster.list.forEach((monster) => {
       monster.listen && monster.listen!(this.keyboard);
     });
   }
@@ -20,46 +23,20 @@ export default class Game {
   public update() {
     this.map.clear(this.context);
 
-    this.map.blocks.forEach((block) => {
-      block.update(this.context);
+    GameObject.update(this.context);
 
-      if (this.map.player.xCollisionWithRect(block)) {
-        this.map.player.onXRectCollision(block);
-      }
-
-      if (this.map.player.yCollisionWithRect(block)) {
-        this.map.player.onYRectCollision(block);
-      }
-
-      this.map.monsters.forEach((monster) => {
-        if (monster.xCollisionWithRect(block)) {
-          monster.onXRectCollision(block);
-        }
-
-        if (monster.yCollisionWithRect(block)) {
-          monster.onYRectCollision(block);
-        }
-      });
-    });
-
-    this.map.monsters.forEach((monster) => {
-      monster.update(this.context);
-    });
-
-    this.map.player.update(this.context);
-
-    if (this.map.player.leftCollisionWithBoundary(this.map.sprain.x)) {
-      this.map.player.velocity.x = 0;
-      this.map.player.position.x = this.map.sprain.x;
+    if (Player.instance.leftCollisionWithBoundary(this.map.sprain.x)) {
+      Player.instance.velocity.x = 0;
+      Player.instance.position.x = this.map.sprain.x;
     }
 
-    if (this.map.player.rightCollisionWithBoundary(this.map.width)) {
-      this.map.player.velocity.x = 0;
-      this.map.player.position.x = this.map.width - this.map.player.width;
+    if (Player.instance.rightCollisionWithBoundary(this.map.width)) {
+      Player.instance.velocity.x = 0;
+      Player.instance.position.x = this.map.width - Player.instance.width;
     }
 
-    if (this.map.player.position.x > this.width / 3 && this.map.player.velocity.x > 0) {
-      this.map.offsetX(this.map.player.velocity.x);
+    if (Player.instance.position.x > this.width / 3 && Player.instance.velocity.x > 0) {
+      this.map.offsetX(Player.instance.velocity.x);
     }
 
     this.context.setTransform(1, 0, 0, 1, -this.map.sprain.x, -this.map.sprain.y);

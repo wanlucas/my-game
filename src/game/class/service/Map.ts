@@ -3,8 +3,6 @@ import platformers from '../platformer';
 import entities from '../monster';
 import maps from '../../data/maps';
 import Player, { id as playerId } from '../entity/Player';
-import RectPlatformer from '../object/RectPlatformer';
-import Monster from '../object/Monster';
 
 const objects = Object.assign(platformers, entities);
 
@@ -12,9 +10,6 @@ export type MapData = string[][];
 
 export default class Map {
   private i = 0;
-  public blocks = RectPlatformer.list;
-  public monsters = Monster.list;
-  public player!: Player;
   public width: number;
   public height: number;
   public sprain = {
@@ -54,7 +49,7 @@ export default class Map {
         const x = j * settings.tileWidth;
         const y = (i - 1) * settings.tileHeight;
 
-        if (tile === playerId) return this.player = new Player({ x, y });
+        if (tile === playerId) return new Player({ x, y });
 
         const GameObject = objects[tile];
 

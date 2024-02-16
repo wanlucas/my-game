@@ -15,10 +15,4 @@ export default class Monster extends RectEntity {
     
     Monster.list.push(this);
   }
-    
-  public destroy() {
-    Monster.list = Monster.list.filter(
-      (monster) => monster !== this
-    );
-  }
 }

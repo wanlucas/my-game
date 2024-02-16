@@ -31,6 +31,8 @@ export default class Player extends Entity {
   private jumpCount = 0;
   private speed = config.speed;
 
+  static instance: Player;
+
   constructor(position: Position) {
     super(
       position,
@@ -68,6 +70,8 @@ export default class Player extends Entity {
     this.sprite.create(PlayerSprite.Crouch, [[540, 136, 28, 28]]);
 
     this.sprite.set(PlayerSprite.Idle);
+
+    Player.instance = this;
   }
 
   protected onBottomCollisionRect(rect: Rectangle) {

@@ -1,8 +1,9 @@
-import settings from '../../settings';
-import { Position } from '../object/GameObject';
-import Monster from '../object/Monster';
-import Keyboard from '../service/Keyboard';
-import Sprite from '../service/Sprite';
+import settings from '../../../settings';
+import { Position } from '../../object/GameObject';
+import Monster from '../../object/Monster';
+import Keyboard from '../../service/Keyboard';
+import Sprite from '../../service/Sprite';
+import Orb from './Orb';
 
 export const id = 'j';
 
@@ -54,6 +55,11 @@ export default class Jenny extends Monster {
       [19, 486, 56, 85, 40],
       [101, 486, 56, 85, 80, () => {
         this.width = config.width * 1.6;
+        new Orb({
+          x: this.position.x,
+          y: this.position.y - (Orb.radius * 2 + 10),
+        
+        });
       }],
       [180, 486, 80, 85],
       [303, 486, 80, 80],

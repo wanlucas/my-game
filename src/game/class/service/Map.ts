@@ -1,10 +1,11 @@
 import settings from '../../settings';
 import platformers from '../platformer';
 import entities from '../monster';
+import testers from '../test';
 import maps from '../../data/maps';
 import Player, { id as playerId } from '../entity/Player';
 
-const objects = Object.assign(platformers, entities);
+const objects = Object.assign(platformers, entities, testers);
 
 export type MapData = string[][];
 

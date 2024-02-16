@@ -1,6 +1,6 @@
 import { Position } from '../object/GameObject';
 import RectEntity from '../object/RectEntity';
-import Jenny, { id as jennyId } from './Jenny/Jenny';
+import Jenny, { id as jennyId } from './Jenny';
 
 export default {
   [jennyId]: Jenny,

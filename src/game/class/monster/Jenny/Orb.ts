@@ -2,11 +2,13 @@ import ArcEntity from '../../object/ArcEntity';
 import { Position } from '../../object/GameObject';
 
 export default class Orb extends ArcEntity {
-  static radius = 10;
+  static radius = 0;
 
   constructor(position: Position) {
     super(position, Orb.radius);
+  }
 
-    this.velocity.x = -10;
+  public onCollision() {
+    this.destroy();
   }
 }

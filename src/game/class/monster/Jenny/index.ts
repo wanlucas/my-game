@@ -19,6 +19,8 @@ const config = {
 };
 
 export default class Jenny extends Monster {
+  private orb: Orb | null = null;
+
   constructor(position: Position) {
     super(
       position,
@@ -52,20 +54,34 @@ export default class Jenny extends Monster {
     });
 
     this.sprite.create(JennySprite.Attack, [
-      [19, 486, 56, 85, 40],
-      [101, 486, 56, 85, 80, () => {
-        this.width = config.width * 1.6;
-        new Orb({
-          x: this.position.x,
-          y: this.position.y - (Orb.radius * 2 + 10),
-        
-        });
+      [19, 486, 56, 85, 10, {
+        onEnd: () => {
+          this.orb = new Orb({
+            x: this.position.x,
+            y: this.position.y - Orb.radius - 10,
+          });
+        },
+      }],
+      [19, 486, 56, 85, 40, {
+        onTick: () => {
+          this.orb!.radius++;
+          this.orb!.position.y--;
+        },
+      }],
+      [101, 486, 56, 85, 80, {
+        onEnd: () => {
+          this.width = config.width * 1.6;
+          this.orb!.velocity.x = -10;
+          this.orb = null;
+        }
       }],
       [180, 486, 80, 85],
       [303, 486, 80, 80],
-      [430, 486, 80, 72, 20, () => {
-        this.width = config.width;
-        this.sprite.set(JennySprite.Idle);
+      [430, 486, 80, 72, 20, {
+        onEnd:  () => {
+          this.width = config.width;
+          this.sprite.set(JennySprite.Idle);
+        }
       }],
     ], {
       loop: false,

@@ -15,9 +15,9 @@ export default class Game {
   ) {
     Player.instance.listen(this.keyboard);
 
-    Monster.list.forEach((monster) => {
-      monster.listen && monster.listen!(this.keyboard);
-    });
+    // Monster.list.forEach((monster) => {
+    //   monster.listen && monster.listen!(this.keyboard);
+    // });
   }
 
   public update() {

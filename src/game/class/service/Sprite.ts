@@ -1,4 +1,9 @@
-export type Coordinates = [number, number, number, number, number?, (() => void)?];
+interface SliceArgs {
+  onEnd?: () => void;
+  onTick?: () => void;
+}
+
+export type Coordinates = [number, number, number, number, number?, SliceArgs?];
 
 export class Slice {
   constructor(
@@ -7,7 +12,8 @@ export class Slice {
     private sw: number,
     private sh: number,
     public duration: number = 5,
-    public callback: () => void = () => {}
+    public onEnd: () => void = () => {},
+    public onTick: () => void = () => {},
   ) { }
 
   public draw(
@@ -49,21 +55,25 @@ export class Animation {
 
   constructor(slices: Coordinates[], { loop, interval }: AnimationArgs = {}) {
     this.slices = slices.map((
-      [sx, sy, sw, sh, duration, callback]
+      [sx, sy, sw, sh, duration, {
+        onEnd = () => {},
+        onTick = () => {}
+      } = {}]
     ) => new Slice(
       sx,
       sy,
       sw,
       sh,
       duration || interval,
-      callback
+      onEnd,
+      onTick,
     ));
 
     this.loop = loop || true;
   }
 
   public next() {
-    this.current.callback();
+    this.current.onEnd();
 
     if (this.loop) this.frame = (this.frame + 1) % this.slices.length;
     else this.frame = Math.min(this.frame + 1, this.slices.length - 1);
@@ -86,6 +96,7 @@ export class Animation {
   ) {
     this.current.draw(context, image, dx, dy, dw, dh);
     ++this.tick >= this.current.duration && this.next();
+    this.current.onTick();
   }
 }
 

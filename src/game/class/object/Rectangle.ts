@@ -1,4 +1,5 @@
 import Sprite from '../service/Sprite';
+import Circle from './Circle';
 import GameObject, { ObjectType, Position } from './GameObject';
 
 export default class Rectangle extends GameObject {
@@ -17,19 +18,18 @@ export default class Rectangle extends GameObject {
     );
   }
 
-  protected onTopCollisionRect(rect: Rectangle) {
-    this.velocity.y = 0;
-    this.position.y = rect.position.y + rect.height;
-  }
-
-  protected onBottomCollisionRect(rect: Rectangle) {
-    this.velocity.y = 0;
-    this.position.y = rect.position.y - this.height;
-  }
-
   public onYColWithRect(rect: Rectangle) {
-    if (this.position.y > rect.position.y) this.onTopCollisionRect(rect);
-    else this.onBottomCollisionRect(rect);
+    this.velocity.y = 0;
+  
+    if (this.position.y > rect.position.y) {
+      this.position.y = rect.position.y + rect.height;
+      this.onTopCol(rect);
+    } else {
+      this.position.y = rect.position.y - this.height;
+      this.onBottomCol(rect);
+    }
+
+    this.onCollision(rect);
   }
 
   public onXColWithRect(rect: Rectangle) {
@@ -37,7 +37,37 @@ export default class Rectangle extends GameObject {
 
     if (this.position.x > rect.position.x) {
       this.position.x = rect.position.x + rect.width;
-    } else this.position.x = rect.position.x - this.width;
+      this.onLeftCol(rect);
+    } else {
+      this.position.x = rect.position.x - this.width;
+      this.onRightCol(rect);
+    }
+
+    this.onCollision(rect);
+  }
+
+  public onXColWithCircle(circle: Circle) {
+    this.velocity.x = 0;
+
+    if (this.position.x > circle.position.x) {
+      this.onLeftCol(circle);
+    } else {
+      this.onRightCol(circle);
+    }
+
+    this.onCollision(circle);
+  }
+
+  public onYColWithCircle(circle: Circle) {
+    this.velocity.y = 0;
+
+    if (this.position.y > circle.position.y) {
+      this.onTopCol(circle);
+    } else {
+      this.onBottomCol(circle);
+    }
+
+    this.onCollision(circle);
   }
 
   public leftCollisionWithBoundary(x: number) {
@@ -46,6 +76,30 @@ export default class Rectangle extends GameObject {
 
   public rightCollisionWithBoundary(x: number) {
     return this.position.x + this.velocity.x + this.width > x;
+  }
+
+  public xColWithCircle(circle: Circle) {
+    const thisX = this.position.x + this.velocity.x;
+    const circleX = circle.position.x + circle.velocity.x;
+
+    const closestX = Math.max(thisX, Math.min(circleX, thisX + this.width));
+    const closestY = Math.max(this.position.y, Math.min(circle.position.y, this.position.y + this.height));
+    const dx = circleX - closestX;
+    const dy = circle.position.y - closestY;
+
+    return dx * dx + dy * dy < circle.radius ** 2;
+  }
+
+  public yColWithCircle(circle: Circle) {
+    const thisY = this.position.y + this.velocity.y;
+    const circleY = circle.position.y + circle.velocity.y;
+
+    const closestX = Math.max(this.position.x, Math.min(circle.position.x, this.position.x + this.width));
+    const closestY = Math.max(thisY, Math.min(circleY, thisY + this.height));
+    const dx = circle.position.x - closestX;
+    const dy = circleY - closestY;
+
+    return dx * dx + dy * dy < circle.radius ** 2;
   }
 
   public xColWithRect(rect: Rectangle) {

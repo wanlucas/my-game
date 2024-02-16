@@ -4,6 +4,8 @@ import { Position } from '../object/GameObject';
 import Keyboard from '../service/Keyboard';
 import Rectangle from '../object/Rectangle';
 import Sprite from '../service/Sprite';
+import Circle from '../object/Circle';
+import Orb from '../monster/Jenny/Orb';
 
 export const id = 'p';
 
@@ -74,9 +76,8 @@ export default class Player extends Entity {
     Player.instance = this;
   }
 
-  protected onBottomCollisionRect(rect: Rectangle) {
+  protected onBottomCol() {
     this.resetJump();
-    super.onBottomCollisionRect(rect);
   }
 
   private moving() {
@@ -112,11 +113,11 @@ export default class Player extends Entity {
       this.velocity.x = Math.min(this.velocity.x + this.acc(), this.speed);
     } else if (this.movingL()) {
       this.velocity.x = Math.max(this.velocity.x - this.acc(), -this.speed);
-    } else if (this.crouched()) {
-      this.velocity.x =
-        Math.max(Math.abs(this.velocity.x) - config.lowAcc, 0) *
-        (this.velocity.x > 0 ? 1 : -1);
-    } else if (!this.jumping()) this.velocity.x = 0;
+    } else if (!this.jumping()) {
+      this.velocity.x = Math.max(
+        Math.abs(this.velocity.x) - (config.lowAcc * 2), 0
+      )  * (this.velocity.x > 0 ? 1 : -1);
+    }
   }
 
   private jump() {
@@ -127,7 +128,7 @@ export default class Player extends Entity {
     this.sprite.set('jump');
   }
 
-  public resetJump() {
+  private resetJump() {
     if (!this.jumping()) return;
 
     this.jumpCount = 0;
@@ -147,6 +148,13 @@ export default class Player extends Entity {
     this.sprite.set(PlayerSprite.Idle);
     this.height = config.height;
     this.position.y -= config.height - config.crouchedHeight;
+  }
+
+  public onCollision(entity: Rectangle) {
+    if (entity instanceof Orb) {
+      this.velocity.y = -5;
+      this.velocity.x = entity.velocity.x;
+    }
   }
 
   public listen(keyboard: Keyboard) {

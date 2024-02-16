@@ -8,7 +8,10 @@ export interface Velocity {
 }
 
 export default class RectEntity extends Rectangle {
-  velocity: Velocity;
+  public velocity = {
+    x: 0,
+    y: 0,
+  };
 
   constructor(
     position: Position,
@@ -17,11 +20,6 @@ export default class RectEntity extends Rectangle {
     sprite: Sprite
   ) {
     super(position, width, height, sprite);
-
-    this.velocity = {
-      x: 0,
-      y: 0,
-    };
   }
 
   protected onTopCollisionRect(rect: Rectangle) {
@@ -97,7 +95,7 @@ export default class RectEntity extends Rectangle {
 
   public update(context: CanvasRenderingContext2D) {
     super.update(context);
-    
+
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
     this.velocity.y += 0.5;

@@ -33,21 +33,21 @@ export class Slice {
 }
 
 interface AnimationArgs {
-  loop: boolean;
-  interval: number;
+  loop?: boolean;
+  interval?: number;
 }
 
 export class Animation {
   private slices: Slice[] = [];
+  private loop: boolean;
   private frame = 0;
   private tick = 0;
-  private loop = true;
 
   get current() {
     return this.slices[this.frame];
   }
 
-  constructor(slices: Coordinates[], { loop, interval }: AnimationArgs) {
+  constructor(slices: Coordinates[], { loop, interval }: AnimationArgs = {}) {
     this.slices = slices.map((
       [sx, sy, sw, sh, duration, callback]
     ) => new Slice(
@@ -59,7 +59,7 @@ export class Animation {
       callback
     ));
 
-    this.loop = loop;
+    this.loop = loop || true;
   }
 
   public next() {
@@ -114,12 +114,12 @@ export default class Sprite {
     this.xAxis = 1;
   }
 
-  public make(slices: Coordinates[], args: AnimationArgs) {
+  public make(slices: Coordinates[], args?: AnimationArgs) {
     if (slices.length > 1) return (this.selected = new Animation(slices, args));
     return (this.selected = new Slice(...slices[0]));
   }
 
-  public create(name: string, slices: Coordinates[], args: AnimationArgs) {
+  public create(name: string, slices: Coordinates[], args?: AnimationArgs) {
     if (slices.length > 1) this.slices.set(name, new Animation(slices, args));
     else this.slices.set(name, new Slice(...slices[0]));
   }

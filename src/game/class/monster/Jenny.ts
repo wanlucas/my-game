@@ -1,6 +1,6 @@
 import settings from '../../settings';
 import { Position } from '../object/GameObject';
-import RectEntity from '../object/RectEntity';
+import Monster from '../object/Monster';
 import Keyboard from '../service/Keyboard';
 import Sprite from '../service/Sprite';
 
@@ -17,7 +17,7 @@ const config = {
   height: settings.tileHeight,
 };
 
-export default class Jenny extends RectEntity {
+export default class Jenny extends Monster {
   constructor(position: Position) {
     super(
       position,

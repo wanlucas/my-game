@@ -1,17 +1,19 @@
 import settings from '../../settings';
 import platformers from '../platformer';
-import entities from '../entity';
-import Rectangle from '../object/Rectangle';
-import Player, { id as PLAYER_ID } from '../entity/Player';
+import entities from '../monster';
 import maps from '../../data/maps';
-import RectEntity from '../object/RectEntity';
+import Player, { id as playerId } from '../entity/Player';
+import RectPlatformer from '../object/RectPlatformer';
+import Monster from '../object/Monster';
+
+const objects = Object.assign(platformers, entities);
 
 export type MapData = string[][];
 
 export default class Map {
   private i = 0;
-  public blocks: Rectangle[] = [];
-  public monsters: RectEntity[] = [];
+  public blocks = RectPlatformer.list;
+  public monsters = Monster.list;
   public player!: Player;
   public width: number;
   public height: number;
@@ -51,23 +53,14 @@ export default class Map {
 
         const x = j * settings.tileWidth;
         const y = (i - 1) * settings.tileHeight;
-        const position = { x, y };
 
-        if (tile === PLAYER_ID) return this.player = new Player(position);
-      
-        const Block = platformers[tile];
+        if (tile === playerId) return this.player = new Player({ x, y });
 
-        if (Block) return this.blocks.push(new Block(position));
+        const GameObject = objects[tile];
 
-        const Monster = entities[tile];
-
-        if (Monster) return this.monsters.push(new Monster(position));   
+        GameObject && new GameObject({ x, y });
       });
     });
-
-    if (!this.player) {
-      throw new Error('No player found');
-    }
   }
 
   public clear(context: CanvasRenderingContext2D) {

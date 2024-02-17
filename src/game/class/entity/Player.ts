@@ -1,6 +1,6 @@
 import Entity from '../object/RectEntity';
 import settings from '../../settings';
-import { Position } from '../object/GameObject';
+import GameObject, { Position } from '../object/GameObject';
 import Keyboard from '../service/Keyboard';
 import Rectangle from '../object/Rectangle';
 import Sprite from '../service/Sprite';
@@ -76,10 +76,6 @@ export default class Player extends Entity {
     Player.instance = this;
   }
 
-  protected onBottomCol() {
-    this.resetJump();
-  }
-
   private moving() {
     return this.movingL() || this.movingR();
   }
@@ -150,11 +146,15 @@ export default class Player extends Entity {
     this.position.y -= config.height - config.crouchedHeight;
   }
 
-  public onCollision(entity: Rectangle) {
-    if (entity instanceof Orb) {
+  public onCollision(col: GameObject) {
+    if (col instanceof Orb) {
       this.velocity.y = -5;
-      this.velocity.x = entity.velocity.x;
+      this.velocity.x = col.velocity.x;
     }
+  }
+
+  public onBottomCol() {
+    this.resetJump();
   }
 
   public listen(keyboard: Keyboard) {

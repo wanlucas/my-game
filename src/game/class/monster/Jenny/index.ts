@@ -62,16 +62,16 @@ export default class Jenny extends Monster {
           });
         },
       }],
-      [19, 486, 56, 85, 40, {
+      [19, 486, 56, 85, 50, {
         onTick: () => {
-          this.orb!.radius++;
-          this.orb!.position.y--;
+          this.orb!.radius += 0.5;
+          this.orb!.position.y -= 0.5;
         },
       }],
-      [101, 486, 56, 85, 80, {
+      [101, 486, 56, 85, 40, {
         onEnd: () => {
           this.width = config.width * 1.6;
-          this.orb!.velocity.x = -10;
+          this.orb!.velocity.x = -15;
           this.orb = null;
         }
       }],

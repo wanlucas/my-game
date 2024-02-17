@@ -6,15 +6,20 @@ interface SliceArgs {
 export type Coordinates = [number, number, number, number, number?, SliceArgs?];
 
 export class Slice {
+  public onEnd: () => void;
+  public onTick: () => void;
+
   constructor(
     private sx: number,
     private sy: number,
     private sw: number,
     private sh: number,
     public duration: number = 5,
-    public onEnd: () => void = () => {},
-    public onTick: () => void = () => {},
-  ) { }
+    args: SliceArgs = {}
+  ) {
+    this.onEnd = args.onEnd || (() => {});
+    this.onTick = args.onTick || (() => {});
+  }
 
   public draw(
     context: CanvasRenderingContext2D,
@@ -55,21 +60,17 @@ export class Animation {
 
   constructor(slices: Coordinates[], { loop, interval }: AnimationArgs = {}) {
     this.slices = slices.map((
-      [sx, sy, sw, sh, duration, {
-        onEnd = () => {},
-        onTick = () => {}
-      } = {}]
+      [sx, sy, sw, sh, duration, args]
     ) => new Slice(
       sx,
       sy,
       sw,
       sh,
       duration || interval,
-      onEnd,
-      onTick,
+      args,
     ));
 
-    this.loop = loop || true;
+    this.loop = loop ?? true;
   }
 
   public next() {

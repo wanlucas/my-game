@@ -13,7 +13,8 @@ export default class OrbTester extends Orb {
   constructor(position: Position) {
     super(position);
 
-    if (OrbTester.i++ === -1)  this.listen(this.keyboard);
+    if (!OrbTester.i++)  this.listen(this.keyboard);
+    this.radius = 100;
   }
 
   public onCollision(): void {

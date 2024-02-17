@@ -1,9 +1,10 @@
+import Sprite from '../service/Sprite';
 import Circle from './Circle';
 import { Position } from './GameObject';
 
 export default class ArcEntity extends Circle {
-  constructor(position: Position, public radius: number) {
-    super(position, radius, {
+  constructor(position: Position, radius: number, sprite: Sprite) {
+    super( position, radius, sprite, {
       static: false,
     });
   }

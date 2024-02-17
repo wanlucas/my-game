@@ -77,7 +77,6 @@ export default class Map {
   }
 
   public draw(context: CanvasRenderingContext2D) {
-    console.log(Math.round(this.sprain.x * 0.02));
     this.bg.draw(
       context,
       this.sprain.x * 0.8,

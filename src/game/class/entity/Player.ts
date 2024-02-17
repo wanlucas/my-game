@@ -2,9 +2,7 @@ import Entity from '../object/RectEntity';
 import settings from '../../settings';
 import GameObject, { Position } from '../object/GameObject';
 import Keyboard from '../service/Keyboard';
-import Rectangle from '../object/Rectangle';
 import Sprite from '../service/Sprite';
-import Circle from '../object/Circle';
 import Orb from '../monster/Jenny/Orb';
 
 export const id = 'p';
@@ -195,7 +193,7 @@ export default class Player extends Entity {
     keyboard.onUp('shift', () => this.walk());
   }
 
-  public update(context: CanvasRenderingContext2D) {
+  public async update(context: CanvasRenderingContext2D) {
     super.update(context);
     this.move();
   }

@@ -90,15 +90,13 @@ export default abstract class GameObject {
 
   public static update(context: CanvasRenderingContext2D) {
     GameObject.rects.forEach((rect, a) => {
-      rect.update(context);
-
       const rectA = rect as Rectangle;
-
+      
       GameObject.rects.forEach((otherRect, b) => {
         if (a === b) return;
 
         const rectB = otherRect as Rectangle;
-
+        
         if (rectA.xColWithRect(rectB)) {
           rectB.onXColWithRect(rectA);
           rectA.onXColWithRect(rectB);
@@ -112,8 +110,6 @@ export default abstract class GameObject {
     });
 
     GameObject.staticRects.forEach((rect) => {
-      rect.update(context);
-
       const rectA = rect as Rectangle;
 
       GameObject.rects.forEach((otherRect) => {
@@ -142,8 +138,6 @@ export default abstract class GameObject {
     });
   
     GameObject.circles.forEach((circle) => {
-      circle.update(context);
-
       const circleA = circle as Circle;
 
       GameObject.rects.forEach((rect) => {
@@ -160,5 +154,13 @@ export default abstract class GameObject {
         }
       });
     });
+
+    GameObject.staticRects
+      .concat(GameObject.staticCircles)
+      .concat(GameObject.rects)
+      .concat(GameObject.circles)
+      .forEach((object) => {
+        object.update(context);
+      });
   }
 }

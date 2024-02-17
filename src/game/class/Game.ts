@@ -36,7 +36,7 @@ export default class Game {
       Player.instance.position.x = this.map.width - Player.instance.width;
     }
 
-    if (Player.instance.rightCollisionWithBoundary(this.width / 3) && Player.instance.velocity.x > 0) {
+    if (Player.instance.rightCollisionWithBoundary(this.width / 2 + this.map.sprain.x) && Player.instance.velocity.x > 0) {
       this.map.offsetX(Player.instance.velocity.x);
     }
 

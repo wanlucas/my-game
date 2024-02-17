@@ -1,3 +1,5 @@
+export const bg = 'data/sprites/frozen-bg-1.jpg';
+
 export default 
 ` 1111111111111111111111111111
   ----------------------------

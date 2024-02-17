@@ -1,3 +1,8 @@
-import init from './init';
+import init, { bg } from './init';
 
-export default [init];
+export default [
+  {
+    bg,
+    data: init,
+  }
+];

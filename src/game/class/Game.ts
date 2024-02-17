@@ -22,6 +22,7 @@ export default class Game {
 
   public update() {
     this.map.clear(this.context);
+    this.map.draw(this.context);
 
     GameObject.update(this.context);
 

@@ -3,7 +3,7 @@ import { Position } from '../../object/GameObject';
 import Monster from '../../object/Monster';
 import Keyboard from '../../service/Keyboard';
 import Sprite from '../../service/Sprite';
-import Orb from './Orb';
+import Orb, { Direction } from './Orb';
 
 export const id = 'j';
 
@@ -20,6 +20,7 @@ const config = {
 
 export default class Jenny extends Monster {
   private orb: Orb | null = null;
+  private direction = Direction.Left;
 
   constructor(position: Position) {
     super(
@@ -57,9 +58,9 @@ export default class Jenny extends Monster {
       [19, 486, 56, 85, 10, {
         onEnd: () => {
           this.orb = new Orb({
-            x: this.position.x,
+            x: this.position.x + (this.direction === Direction.Right ? this.width : 0),
             y: this.position.y - Orb.radius - 10,
-          });
+          }, this.direction);
         },
       }],
       [19, 486, 56, 85, 50, {
@@ -71,7 +72,7 @@ export default class Jenny extends Monster {
       [101, 486, 56, 85, 40, {
         onEnd: () => {
           this.width = config.width * 1.6;
-          this.orb!.velocity.x = -15;
+          this.orb!.throw();
           this.orb = null;
         }
       }],
@@ -98,12 +99,14 @@ export default class Jenny extends Monster {
   private turnLeft() {
     this.sprite.set(JennySprite.Walk);
     this.sprite.revertX();
+    this.direction = Direction.Left;
     this.velocity.x = -2;
   }
 
   private turnRight() {
     this.sprite.set(JennySprite.Walk);
     this.sprite.invertX();
+    this.direction = Direction.Right;
     this.velocity.x = 2;
   }
 

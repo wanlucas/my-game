@@ -1,23 +1,23 @@
 export const bg = [
   {
     data: 'data/bg/night-1/sky.png',
-    rate: 0.1
+    rate: 0.01
   },
   {
     data: 'data/bg/night-1/clouds_1.png',
-    rate: 0.1
+    rate: 0.02
   },
   {
     data: 'data/bg/night-1/clouds_2.png',
-    rate: 0.1
+    rate: 0.02
   }, 
   {
     data: 'data/bg/night-1/rocks.png',
-    rate: 0.3
+    rate: 0.1
   },
   {
     data: 'data/bg/night-1/ground.png',
-    rate: 0.7
+    rate: 0.4
   },
 ];
 
@@ -30,6 +30,6 @@ export default
   ----------------------------
   ----------------------------
   ----------------------------
-  ----p---11------------------
-  ----1--------j--------------
+  ----1----o-----o------------
+  ----1p1------j--------------
   1111111111111111111111111111`;

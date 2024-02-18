@@ -97,14 +97,13 @@ export default abstract class GameObject {
 
         const rectB = otherRect as Rectangle;
         
-        if (rectA.xColWithRect(rectB)) {
-          rectB.onXColWithRect(rectA);
-          rectA.onXColWithRect(rectB);
-        }
-
         if (rectA.yColWithRect(rectB)) {
-          rectB.onYColWithRect(rectA);
           rectA.onYColWithRect(rectB);
+          rectB.onYColWithRect(rectA);
+        }
+        if (rectA.xColWithRect(rectB)) {
+          rectA.onXColWithRect(rectB);
+          rectB.onXColWithRect(rectA);
         }
       });
     });

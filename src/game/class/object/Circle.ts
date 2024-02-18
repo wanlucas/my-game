@@ -19,10 +19,16 @@ export default class Circle extends GameObject {
     this.velocity.x = 0;
 
     if (this.position.x > rect.position.x) {
-      this.position.x = rect.position.x + rect.width + this.radius;
+      if (this.velocity.x > 0) {
+        this.position.x = rect.position.x + rect.width + this.radius;
+      }
+
       this.onLeftCol(rect);
     } else {
-      this.position.x = rect.position.x - this.radius;
+      if (this.velocity.x < 0) {
+        this.position.x = rect.position.x - this.radius;
+      }
+
       this.onRightCol(rect);
     }
 
@@ -33,10 +39,16 @@ export default class Circle extends GameObject {
     this.velocity.y = 0;
 
     if (this.position.y > rect.position.y) {
-      this.position.y = rect.position.y + rect.height + this.radius;
+      if (this.velocity.y > 0) {
+        this.position.y = rect.position.y + rect.height + this.radius;
+      }
+
       this.onTopCol(rect);
     } else {
-      this.position.y = rect.position.y - this.radius;
+      if (this.velocity.y < 0) {
+        this.position.y = rect.position.y - this.radius;
+      }
+
       this.onBottomCol(rect);
     }
 
@@ -45,9 +57,8 @@ export default class Circle extends GameObject {
 
   public xColWithRect(rect: Rectangle) {
     const thisX = this.position.x + this.velocity.x;
-    const rectX = rect.position.x + rect.velocity.x;
 
-    const closestX = Math.max(rectX, Math.min(thisX, rectX + rect.width));
+    const closestX = Math.max(rect.position.x, Math.min(thisX, rect.position.x + rect.width));
     const closestY = Math.max(rect.position.y, Math.min(this.position.y, rect.position.y + rect.height));
     const dx = thisX - closestX;
     const dy = this.position.y - closestY;
@@ -57,10 +68,9 @@ export default class Circle extends GameObject {
 
   public yColWithRect(rect: Rectangle) {
     const thisY = this.position.y + this.velocity.y;
-    const rectY = rect.position.y + rect.velocity.x;
 
     const closestX = Math.max(rect.position.x, Math.min(this.position.x, rect.position.x + rect.width));
-    const closestY = Math.max(rectY, Math.min(thisY, rectY + rect.height));
+    const closestY = Math.max(rect.position.y, Math.min(thisY, rect.position.y + rect.height));
     const dx = this.position.x - closestX;
     const dy = thisY - closestY;
 

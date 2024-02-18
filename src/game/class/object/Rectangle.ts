@@ -80,11 +80,10 @@ export default class Rectangle extends GameObject {
 
   public xColWithCircle(circle: Circle) {
     const thisX = this.position.x + this.velocity.x;
-    const circleX = circle.position.x + circle.velocity.x;
 
-    const closestX = Math.max(thisX, Math.min(circleX, thisX + this.width));
+    const closestX = Math.max(thisX, Math.min(circle.position.x, thisX + this.width));
     const closestY = Math.max(this.position.y, Math.min(circle.position.y, this.position.y + this.height));
-    const dx = circleX - closestX;
+    const dx = circle.position.x - closestX;
     const dy = circle.position.y - closestY;
 
     return dx * dx + dy * dy < circle.radius ** 2;
@@ -92,35 +91,30 @@ export default class Rectangle extends GameObject {
 
   public yColWithCircle(circle: Circle) {
     const thisY = this.position.y + this.velocity.y;
-    const circleY = circle.position.y + circle.velocity.y;
 
     const closestX = Math.max(this.position.x, Math.min(circle.position.x, this.position.x + this.width));
-    const closestY = Math.max(thisY, Math.min(circleY, thisY + this.height));
+    const closestY = Math.max(thisY, Math.min(circle.position.y, thisY + this.height));
     const dx = circle.position.x - closestX;
-    const dy = circleY - closestY;
+    const dy = circle.position.y - closestY;
 
     return dx * dx + dy * dy < circle.radius ** 2;
   }
 
   public xColWithRect(rect: Rectangle) {
     return (
-      this.position.x + this.velocity.x + this.width >
-        rect.position.x + rect.velocity.x &&
-      this.position.x + this.velocity.x <
-        rect.position.x + rect.velocity.x + rect.width &&
-      this.position.y + this.height > rect.position.y &&
-      this.position.y < rect.position.y + rect.height
+      this.position.x + this.velocity.x + this.width > rect.position.x
+      && this.position.x + this.velocity.x < rect.position.x + rect.width
+      && this.position.y + this.height > rect.position.y
+      && this.position.y < rect.position.y + rect.height
     );
   }
 
   public yColWithRect(rect: Rectangle) {
     return (
-      this.position.y + this.velocity.y + this.height >
-        rect.position.y + rect.velocity.y &&
-      this.position.y + this.velocity.y <
-        rect.position.y + rect.velocity.y + rect.height &&
-      this.position.x + this.width > rect.position.x &&
-      this.position.x < rect.position.x + rect.width
+      this.position.y + this.velocity.y + this.height > rect.position.y
+      && this.position.y + this.velocity.y < rect.position.y + rect.height
+      && this.position.x + this.width > rect.position.x
+      && this.position.x < rect.position.x + rect.width
     );
   }
 

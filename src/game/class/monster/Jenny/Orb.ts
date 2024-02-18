@@ -57,7 +57,11 @@ export default class Orb extends ArcEntity {
     this.velocity.x = this.direction === Direction.Right ? Orb.velocity : -Orb.velocity; 
   }
 
+  private colliding() {
+    return this.sprite.is(OrbSprites.Hit);
+  }
+
   public onCollision() {
-    this.sprite.set(OrbSprites.Hit);
+    if (!this.colliding()) this.sprite.set(OrbSprites.Hit);
   }
 }

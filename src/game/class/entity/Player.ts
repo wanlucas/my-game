@@ -4,6 +4,7 @@ import GameObject, { Position } from '../object/GameObject';
 import Keyboard from '../service/Keyboard';
 import Sprite from '../service/Sprite';
 import Orb from '../monster/Jenny/Orb';
+import Jenny from '../monster/Jenny';
 
 export const id = 'p';
 

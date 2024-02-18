@@ -131,6 +131,10 @@ export default class Sprite {
     this.xAxis = 1;
   }
 
+  public is(name: string) {
+    return this.selectedName === name;
+  }
+
   public make(slices: Coordinates[], args?: AnimationArgs) {
     if (slices.length > 1) return (this.selected = new Animation(slices, args));
     return (this.selected = new Slice(...slices[0]));

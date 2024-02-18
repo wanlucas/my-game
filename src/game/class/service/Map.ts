@@ -4,18 +4,25 @@ import entities from '../monster';
 import testers from '../test';
 import maps from '../../data/maps';
 import Player, { id as playerId } from '../entity/Player';
-import Sprite from './Sprite';
+import Background from './Background';
 
 const objects = Object.assign(platformers, entities, testers);
 
 export type MapData = string[][];
 
+export interface Sprain {
+  x: number;
+  y: number;
+}
+
 export default class Map {
   private i = 0;
   public width: number;
   public height: number;
-  private bg: Sprite;
-  public sprain = {
+  private bg: Background;
+  
+
+  public sprain: Sprain = {
     x: 0,
     y: 0,
   };
@@ -35,11 +42,11 @@ export default class Map {
     const data = this.data;
 
     this.parse(data);
-    this.bg = new Sprite(this.current.bg);
     this.width = data[0].length * settings.tileWidth;
     this.height = data.length * settings.tileHeight;
+    this.bg = new Background(this.width, this.height);
 
-    this.bg.make([[0, 0, this.width, this.height]]);
+    this.current.bg.forEach((bg) => this.bg.create(bg.data, bg.rate));
   }
 
   public offsetX(x: number) {
@@ -77,12 +84,6 @@ export default class Map {
   }
 
   public draw(context: CanvasRenderingContext2D) {
-    this.bg.draw(
-      context,
-      this.sprain.x * 0.8,
-      this.sprain.y * 0.8,
-      this.width,
-      this.height
-    );
+    this.bg.draw(context, this.sprain);
   }
 }

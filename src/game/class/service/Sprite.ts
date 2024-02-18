@@ -109,12 +109,17 @@ export default class Sprite {
   private xAxis = 1;
   private yAxis = 1;
 
+  public width: number;
+  public height: number;
+
   constructor(src: string) {
     const image = new Image();
 
     image.src = src;
 
     this.slices = new Map();
+    this.width = image.width;
+    this.height = image.height;
     this.image = image;
   }
 

@@ -1,4 +1,25 @@
-export const bg = 'data/sprites/frozen-bg-1.jpg';
+export const bg = [
+  {
+    data: 'data/bg/night-1/sky.png',
+    rate: 0.1
+  },
+  {
+    data: 'data/bg/night-1/clouds_1.png',
+    rate: 0.1
+  },
+  {
+    data: 'data/bg/night-1/clouds_2.png',
+    rate: 0.1
+  }, 
+  {
+    data: 'data/bg/night-1/rocks.png',
+    rate: 0.3
+  },
+  {
+    data: 'data/bg/night-1/ground.png',
+    rate: 0.7
+  },
+];
 
 export default 
 ` 1111111111111111111111111111

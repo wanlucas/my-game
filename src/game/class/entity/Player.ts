@@ -4,7 +4,6 @@ import GameObject, { Position } from '../object/GameObject';
 import Keyboard from '../service/Keyboard';
 import Sprite from '../service/Sprite';
 import Orb from '../monster/Jenny/Orb';
-import Jenny from '../monster/Jenny';
 
 export const id = 'p';
 
@@ -16,10 +15,10 @@ enum PlayerSprite {
 }
 
 const config = {
-  speed: 4,
-  maxSpeed: 8,
-  lowAcc: 0.2,
-  acc: 0.5,
+  speed: 7,
+  maxSpeed: 10,
+  lowAcc: 0.5,
+  acc: 1,
   jumps: 2,
   width: settings.tileWidth / 2,
   height: settings.tileHeight,
@@ -119,7 +118,7 @@ export default class Player extends Entity {
     if (this.jumpCount >= config.jumps || this.crouched()) return;
 
     this.jumpCount++;
-    this.velocity.y = -10;
+    this.velocity.y = -15;
     this.sprite.set('jump');
   }
 

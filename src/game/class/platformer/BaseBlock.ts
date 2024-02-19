@@ -8,6 +8,6 @@ export default class BaseBlock extends RectPlatformer {
   constructor(position: Position) {
     super(position, new Sprite('data/sprites/base-block.png'));
 
-    this.sprite.make([[753, 46, 125, 130]]);
+    this.sprite.make([[0, 0, 128, 128]]);
   }
 }

@@ -1,9 +1,9 @@
 class Settings {
-  public width = window.innerWidth;
-  public height = window.innerHeight;
+  public width = 1920;
+  public height = 1080;
   public columns = 18;
   public rows = 10;
-  public tileWidth = this.width / this.columns;
+  public tileWidth = Math.round(this.width / this.columns);
   public tileHeight = Math.round((this.height * 1.06) / this.rows);
 }
 

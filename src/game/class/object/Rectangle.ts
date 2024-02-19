@@ -29,6 +29,7 @@ export default class Rectangle extends GameObject {
       this.onBottomCol(rect);
     }
 
+    this.onYCol(rect);
     this.onCollision(rect);
   }
 
@@ -43,6 +44,7 @@ export default class Rectangle extends GameObject {
       this.onRightCol(rect);
     }
 
+    this.onXCol(rect);
     this.onCollision(rect);
   }
 
@@ -55,6 +57,7 @@ export default class Rectangle extends GameObject {
       this.onRightCol(circle);
     }
 
+    this.onXCol(circle);
     this.onCollision(circle);
   }
 
@@ -67,6 +70,7 @@ export default class Rectangle extends GameObject {
       this.onBottomCol(circle);
     }
 
+    this.onYCol(circle);
     this.onCollision(circle);
   }
 

@@ -6,7 +6,7 @@ import maps from '../../data/maps';
 import Player, { id as playerId } from '../entity/Player';
 import Background from './Background';
 
-const objects = Object.assign(platformers, entities, testers);
+const objects = Object.assign(platformers, entities, testers) as Record<string, any>;
 
 export type MapData = string[][];
 
@@ -20,7 +20,6 @@ export default class Map {
   public width: number;
   public height: number;
   private bg: Background;
-  
 
   public sprain: Sprain = {
     x: 0,
@@ -69,7 +68,11 @@ export default class Map {
 
         const GameObject = objects[tile];
 
-        GameObject && new GameObject({ x, y });
+        GameObject &&
+          new GameObject({
+            x,
+            y: y + (settings.tileHeight - GameObject.height),
+          });
       });
     });
   }

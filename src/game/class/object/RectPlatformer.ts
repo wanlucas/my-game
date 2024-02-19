@@ -4,11 +4,14 @@ import Rectangle from './Rectangle';
 import Sprite from '../service/Sprite';
 
 export default class RectPlatformer extends Rectangle {
+  public static width = settings.tileWidth;
+  public static height = settings.tileHeight;
+
   constructor(position: Position, sprite: Sprite) {
     super(
       position,
-      settings.tileWidth, 
-      settings.tileHeight, 
+      RectPlatformer.width, 
+      RectPlatformer.height, 
       sprite, {
         static: true,
       }

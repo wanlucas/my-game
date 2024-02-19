@@ -4,6 +4,7 @@ import GameObject, { Position } from '../object/GameObject';
 import Keyboard from '../service/Keyboard';
 import Sprite from '../service/Sprite';
 import Orb from '../monster/Jenny/Orb';
+import Monster from '../object/Monster';
 
 export const id = 'p';
 
@@ -14,30 +15,29 @@ enum PlayerSprite {
   Crouch = 'crouch',
 }
 
-const config = {
-  speed: 7,
-  maxSpeed: 10,
-  lowAcc: 0.5,
-  acc: 1,
-  jumps: 2,
-  width: settings.tileWidth / 2,
-  height: settings.tileHeight,
-  crouchedHeight: settings.tileHeight * 0.7,
-};
-
 export default class Player extends Entity {
+  public static speed = 7;
+  public static maxSpeed = 10;
+  public static lowAcc = 0.5;
+  public static acc = 1;
+  public static jumps = 2;
+  public static width = settings.tileWidth / 2;
+  public static height = settings.tileHeight;
+  public static crouchedHeight = settings.tileHeight * 0.7;
+
+
   private movingR = () => false;
   private movingL = () => false;
   private jumpCount = 0;
-  private speed = config.speed;
+  private speed = Player.speed;
 
   static instance: Player;
 
   constructor(position: Position) {
     super(
       position,
-      config.width,
-      config.height,
+      Player.width,
+      Player.height,
       new Sprite('data/sprites/player.png')
     );
 
@@ -87,19 +87,19 @@ export default class Player extends Entity {
   }
 
   private crouched() {
-    return this.height === config.crouchedHeight;
+    return this.height === Player.crouchedHeight;
   }
 
   private acc() {
-    return !this.fallingDown() && !this.jumping() ? config.acc : config.lowAcc;
+    return !this.fallingDown() && !this.jumping() ? Player.acc : Player.lowAcc;
   }
 
   private run() {
-    this.speed = config.maxSpeed;
+    this.speed = Player.maxSpeed;
   }
 
   private walk() {
-    this.speed = config.speed;
+    this.speed = Player.speed;
   }
 
   private move() {
@@ -109,13 +109,13 @@ export default class Player extends Entity {
       this.velocity.x = Math.max(this.velocity.x - this.acc(), -this.speed);
     } else if (!this.jumping()) {
       this.velocity.x = Math.max(
-        Math.abs(this.velocity.x) - (config.lowAcc * 2), 0
+        Math.abs(this.velocity.x) - (Player.lowAcc * 2), 0
       )  * (this.velocity.x > 0 ? 1 : -1);
     }
   }
 
   private jump() {
-    if (this.jumpCount >= config.jumps || this.crouched()) return;
+    if (this.jumpCount >= Player.jumps || this.crouched()) return;
 
     this.jumpCount++;
     this.velocity.y = -15;
@@ -134,20 +134,28 @@ export default class Player extends Entity {
 
   private crouch() {
     this.sprite.set(PlayerSprite.Crouch);
-    this.height = config.crouchedHeight;
-    this.position.y += config.height - config.crouchedHeight;
+    this.height = Player.crouchedHeight;
+    this.position.y += Player.height - Player.crouchedHeight;
   }
 
   private standUp() {
     this.sprite.set(PlayerSprite.Idle);
-    this.height = config.height;
-    this.position.y -= config.height - config.crouchedHeight;
+    this.height = Player.height;
+    this.position.y -= Player.height - Player.crouchedHeight;
   }
 
   public onCollision(col: GameObject) {
     if (col instanceof Orb) {
       this.velocity.y = -5;
       this.velocity.x = col.velocity.x;
+    }
+
+    if (col instanceof Monster) {
+      if (col.position.x > this.position.x) {
+        this.velocity.x = -20;
+      } else this.velocity.x = 20;
+
+      this.velocity.y = -5;
     }
   }
 

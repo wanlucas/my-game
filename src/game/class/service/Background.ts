@@ -16,16 +16,18 @@ export default class Background {
     const image = new Image();
 
     image.src = layer;
+    
+    image.onload = () => {
+      const xl = Math.ceil(this.width / image.width);
 
-    const xl = Math.ceil(this.width / image.width);
-
-    for (let i = 0; i <= xl; i++) {
-      this.layers.push({
-        data: image,
-        rate,
-        x: i * settings.width,
-      });
-    }
+      for (let i = 0; i <= xl; i++) {
+        this.layers.push({
+          data: image,
+          rate,
+          x: i * settings.width,
+        });
+      }
+    };
   }
 
   public draw(context: CanvasRenderingContext2D, sprain: Sprain) {

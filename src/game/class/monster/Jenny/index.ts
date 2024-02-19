@@ -13,20 +13,18 @@ enum JennySprite {
   Attack = 'attack',
 }
 
-const config = {
-  width: settings.tileWidth * 0.7,
-  height: settings.tileHeight,
-};
-
 export default class Jenny extends Monster {
+  public static width = settings.tileWidth * 0.7;
+  public static height = settings.tileHeight;
+
   private orb: Orb | null = null;
   private direction = Direction.Left;
 
   constructor(position: Position) {
     super(
       position,
-      config.width,
-      config.height,
+      Jenny.width,
+      Jenny.height,
       new Sprite('data/sprites/jenny.png')
     );
 
@@ -71,7 +69,7 @@ export default class Jenny extends Monster {
       }],
       [101, 486, 56, 85, 40, {
         onEnd: () => {
-          this.width = config.width * 1.6;
+          this.width = Jenny.width * 1.6;
           this.orb!.throw();
           this.orb = null;
         }
@@ -80,7 +78,7 @@ export default class Jenny extends Monster {
       [303, 486, 80, 80],
       [430, 486, 80, 72, 20, {
         onEnd:  () => {
-          this.width = config.width;
+          this.width = Jenny.width;
           this.sprite.set(JennySprite.Idle);
         }
       }],

@@ -74,25 +74,19 @@ export default abstract class GameObject {
   public abstract update(context: CanvasRenderingContext2D): void;
 
   public static update(context: CanvasRenderingContext2D) {
-    GameObject.rects.forEach((rect, a) => {
-      const rectA = rect as Rectangle;
+    GameObject.rects.intersect((a, b) => {
+      const rectA = a as Rectangle;
+      const rectB = b as Rectangle;
 
-      rectA.update(context);
-      
-      GameObject.rects.forEach((otherRect, b) => {
-        if (a === b) return;
+      if (rectA.xColWithRect(rectB)) {
+        Collision.onXRectRect(rectA, rectB);
+      }
 
-        const rectB = otherRect as Rectangle;
-        
-        if (rectA.xColWithRect(rectB)) {
-          Collision.onXRectRect(rectA, rectB);
-        }
+      if (rectA.yColWithRect(rectB)) {
+        Collision.onYRectRect(rectA, rectB);
+      }
+    }, (rect) => rect.update(context));
 
-        if (rectA.yColWithRect(rectB)) {
-          Collision.onYRectRect(rectA, rectB);
-        }
-      });
-    });
 
     GameObject.circles.forEach((circle) => {
       const circleA = circle as Circle;

@@ -2,7 +2,7 @@ import Entity from '../object/RectEntity';
 import settings from '../../settings';
 import GameObject, { Position } from '../object/GameObject';
 import Keyboard from '../service/Keyboard';
-import Sprite from '../service/Sprite';
+import Sprite from '../interface/Sprite';
 import Orb from '../monster/Jenny/Orb';
 import Monster from '../object/Monster';
 
@@ -146,15 +146,14 @@ export default class Player extends Entity {
 
   public onCollision(col: GameObject) {
     if (col instanceof Orb) {
-      
-      this.velocity.y = -5;
       this.velocity.x = col.velocity.x;
+      this.velocity.y = -5;
     }
 
     if (col instanceof Monster) {
       if (col.position.x > this.position.x) {
-        this.velocity.x = -20;
-      } else this.velocity.x = 20;
+        this.velocity.x = -10;
+      } else this.velocity.x = 10;
 
       this.velocity.y = -5;
     }

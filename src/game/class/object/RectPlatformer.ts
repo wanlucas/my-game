@@ -1,7 +1,7 @@
 import settings from '../../settings';
 import { Position } from './GameObject';
 import Rectangle from './Rectangle';
-import Sprite from '../service/Sprite';
+import Sprite from '../interface/Sprite';
 
 export default class RectPlatformer extends Rectangle {
   public static width = settings.tileWidth;

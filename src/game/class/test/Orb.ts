@@ -6,7 +6,7 @@ export const id = 'o';
 
 export default class OrbTester extends Orb {
   private static i = 0;
-  private static velocity = 2;
+  public static speed = 2;
 
   private keyboard = new Keyboard();
 
@@ -22,17 +22,17 @@ export default class OrbTester extends Orb {
   }
 
   private listen(keyboard: Keyboard) {
-    keyboard.onDown('d', () => this.velocity.x = OrbTester.velocity);
+    keyboard.onDown('d', () => this.velocity.x = OrbTester.speed);
 
-    keyboard.onDown('a', () => this.velocity.x = -OrbTester.velocity);
+    keyboard.onDown('a', () => this.velocity.x = -OrbTester.speed);
 
     keyboard.onUp('a', () => this.velocity.x = 0);
 
     keyboard.onUp('d', () => this.velocity.x = 0);
 
-    keyboard.onDown('w', () => this.velocity.y = -OrbTester.velocity);
+    keyboard.onDown('w', () => this.velocity.y = -OrbTester.speed);
 
-    keyboard.onDown('s', () => this.velocity.y = OrbTester.velocity);
+    keyboard.onDown('s', () => this.velocity.y = OrbTester.speed);
 
     keyboard.onUp('w', () => this.velocity.y = 0);
 

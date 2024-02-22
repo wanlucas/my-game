@@ -105,11 +105,12 @@ export default class Collision {
   }
 
   public static xRectCircle(a: Rectangle, b: Circle) {
-    const thisX = a.position.x + a.velocity.x;
+    const ax = a.position.x + a.velocity.x;
+    const bx = b.position.x + b.velocity.x;
 
-    const closestX = Math.max(thisX, Math.min(b.position.x, thisX + a.width));
+    const closestX = Math.max(ax, Math.min(bx, ax + a.width));
     const closestY = Math.max(a.position.y, Math.min(b.position.y, a.position.y + a.height));
-    const dx = b.position.x - closestX;
+    const dx = bx - closestX;
     const dy = b.position.y - closestY;
 
     return dx * dx + dy * dy < b.radius ** 2;
@@ -148,12 +149,13 @@ export default class Collision {
   }
 
   public static yRectCircle(a: Rectangle, b: Circle) {
-    const thisY = a.position.y + a.velocity.y;
+    const ay = a.position.y + a.velocity.y;
+    const by = b.position.y + b.velocity.y;
 
     const closestX = Math.max(a.position.x, Math.min(b.position.x, a.position.x + a.width));
-    const closestY = Math.max(thisY, Math.min(b.position.y, thisY + a.height));
+    const closestY = Math.max(ay, Math.min(by, ay + a.height));
     const dx = b.position.x - closestX;
-    const dy = b.position.y - closestY;
+    const dy = by - closestY;
 
     return dx * dx + dy * dy < b.radius ** 2;
   }

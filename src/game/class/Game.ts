@@ -2,7 +2,7 @@ import Player from './entity/Player';
 import GameObject from './object/GameObject';
 import Monster from './object/Monster';
 import Keyboard from './service/Keyboard';
-import Map from './service/Map';
+import Map from './Map';
 
 export default class Game {
   private map: Map = new Map();
@@ -15,9 +15,9 @@ export default class Game {
   ) {
     Player.instance.listen(this.keyboard);
 
-    // Monster.list.forEach((monster) => {
-    //   monster.listen && monster.listen!(this.keyboard);
-    // });
+    Monster.list.forEach((monster) => {
+      monster.listen(Player.instance);
+    });
   }
 
   public update() {

@@ -1,6 +1,6 @@
 import { Position } from '../object/GameObject';
 import RectPlatformer from '../object/RectPlatformer';
-import Sprite from '../service/Sprite';
+import Sprite from '../interface/Sprite';
 
 export const id = '1';
 

@@ -1,6 +1,6 @@
 import ArcEntity from '../../object/ArcEntity';
-import { Position } from '../../object/GameObject';
-import Sprite from '../../service/Sprite';
+import GameObject, { Position } from '../../object/GameObject';
+import Sprite from '../../interface/Sprite';
 
 enum OrbSprites {
   Idle = 'idle',
@@ -14,7 +14,7 @@ export enum Direction {
 
 export default class Orb extends ArcEntity {
   public static radius = 0;
-  private static velocity = 15;
+  public static speed = 15;
 
   constructor(position: Position, private direction: Direction = Direction.Left) {
     super(position, Orb.radius,  new Sprite('data/sprites/orb.png'));
@@ -52,8 +52,14 @@ export default class Orb extends ArcEntity {
     }
   }
 
-  public throw() {
-    this.velocity.x = this.direction === Direction.Right ? Orb.velocity : -Orb.velocity; 
+  public throw(target: GameObject) {
+    const dx = target.position.x - this.position.x;
+    const dy = target.position.y - this.position.y;
+
+    const angle = Math.atan2(dy, dx);
+
+    this.velocity.x = Math.cos(angle) * Orb.speed;
+    this.velocity.y = Math.sin(angle) * Orb.speed;
   }
 
   private colliding() {

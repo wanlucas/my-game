@@ -1,5 +1,5 @@
 import settings from '../../settings';
-import { Sprain } from './Map';
+import { Sprain } from '../Map';
 
 interface Layer {
   data: HTMLImageElement;

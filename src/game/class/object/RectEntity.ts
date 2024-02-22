@@ -1,4 +1,4 @@
-import Sprite from '../service/Sprite';
+import Sprite from '../interface/Sprite';
 import { Position } from './GameObject';
 import Rectangle from './Rectangle';
 

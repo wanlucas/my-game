@@ -1,7 +1,7 @@
 import settings from '../../../settings';
-import { Position } from '../../object/GameObject';
+import GameObject, { Position } from '../../object/GameObject';
 import Monster from '../../object/Monster';
-import Sprite from '../../service/Sprite';
+import Sprite from '../../interface/Sprite';
 import Orb, { Direction } from './Orb';
 
 export const id = 'j';
@@ -13,11 +13,16 @@ enum JennySprite {
 }
 
 export default class Jenny extends Monster {
+  private static attackInt = 100;
+  private static attackDis = 600;
+
   public static width = settings.tileWidth * 0.7;
   public static height = settings.tileHeight;
+  public static speed = 2;
 
   private orb: Orb | null = null;
   private direction = Direction.Left;
+  private attackInt = 0;
 
   constructor(position: Position) {
     super(
@@ -69,7 +74,7 @@ export default class Jenny extends Monster {
       [101, 486, 56, 85, 40, {
         onEnd: () => {
           this.width = Jenny.width * 1.6;
-          this.orb!.throw();
+          this.orb!.throw(this.target!);
           this.orb = null;
         }
       }],
@@ -86,25 +91,31 @@ export default class Jenny extends Monster {
       interval: 10,
     });
 
-    this.sprite.set(JennySprite.Attack);
+    this.sprite.set(JennySprite.Idle);
+  }
+
+  private attacking() {
+    return this.sprite.is(JennySprite.Attack);
   }
 
   private attack() {
+    this.stop();
     this.sprite.set(JennySprite.Attack);
+    this.attackInt = Jenny.attackInt;
   }
 
   private turnLeft() {
     this.sprite.set(JennySprite.Walk);
     this.sprite.revertX();
     this.direction = Direction.Left;
-    this.velocity.x = -2;
+    this.velocity.x = -Jenny.speed;
   }
 
   private turnRight() {
     this.sprite.set(JennySprite.Walk);
     this.sprite.invertX();
     this.direction = Direction.Right;
-    this.velocity.x = 2;
+    this.velocity.x = Jenny.speed;
   }
 
   private stop() {
@@ -114,5 +125,14 @@ export default class Jenny extends Monster {
 
   public update(context: CanvasRenderingContext2D) {
     super.update(context);
+
+    if (!this.target || this.attacking() || this.attackInt-- > 0) return;
+
+    if (this.target.position.x < this.position.x) this.turnLeft();
+    else this.turnRight();
+
+    if (Math.abs(this.target.position.x - this.position.x) < Jenny.attackDis) {
+      this.attack();
+    }
   }
 }

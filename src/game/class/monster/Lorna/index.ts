@@ -2,7 +2,7 @@ import settings from '../../../settings';
 import Player from '../../entity/Player';
 import GameObject, { Position } from '../../object/GameObject';
 import Monster from '../../object/Monster';
-import Sprite from '../../service/Sprite';
+import Sprite from '../../interface/Sprite';
 import { Direction } from '../Jenny/Orb';
 
 export const id = 'l';

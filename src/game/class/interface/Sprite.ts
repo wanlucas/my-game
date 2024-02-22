@@ -146,6 +146,8 @@ export default class Sprite {
   }
 
   public set(name: string) {
+    if (this.is(name)) return;
+
     const selected = this.slices.get(name);
 
     if (!selected) return;

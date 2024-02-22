@@ -1,5 +1,5 @@
 import Collision from '../service/Collision';
-import Sprite from '../service/Sprite';
+import Sprite from '../interface/Sprite';
 import Circle from './Circle';
 import GameObject, { ObjectType, Position } from './GameObject';
 

@@ -2,7 +2,6 @@ import settings from '../../../settings';
 import Player from '../../entity/Player';
 import GameObject, { Position } from '../../object/GameObject';
 import Monster from '../../object/Monster';
-import RectPlatformer from '../../object/RectPlatformer';
 import Sprite from '../../service/Sprite';
 import { Direction } from '../Jenny/Orb';
 
@@ -16,7 +15,7 @@ enum LornaSprites {
 
 export default class Lorna extends Monster {
   public static width = settings.tileWidth / 2;
-  public static height = settings.tileHeight * 1.2;
+  public static height = Math.round(settings.tileHeight * 1.2);
   public static speed = 2;
 
   private direction = Direction.Left;

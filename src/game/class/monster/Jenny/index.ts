@@ -1,7 +1,6 @@
 import settings from '../../../settings';
 import { Position } from '../../object/GameObject';
 import Monster from '../../object/Monster';
-import Keyboard from '../../service/Keyboard';
 import Sprite from '../../service/Sprite';
 import Orb, { Direction } from './Orb';
 
@@ -115,27 +114,5 @@ export default class Jenny extends Monster {
 
   public update(context: CanvasRenderingContext2D) {
     super.update(context);
-  }
-
-  public listen(keyboard: Keyboard) {
-    keyboard.onDown('d', () => {
-      this.turnRight();
-    });
-
-    keyboard.onDown('a', () => {
-      this.turnLeft();
-    });
-
-    keyboard.onUp('d', () => {
-      this.stop();
-    });
-
-    keyboard.onUp('a', () => {
-      this.stop();
-    });
-
-    keyboard.onDown(' ', () => {
-      this.attack();
-    });
   }
 }

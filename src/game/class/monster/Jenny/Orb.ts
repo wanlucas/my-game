@@ -33,7 +33,6 @@ export default class Orb extends ArcEntity {
       interval: 3
     });
 
-
     this.sprite.create(OrbSprites.Hit, [
       [16, 640, 145, 145],
       [200, 640, 145, 145],

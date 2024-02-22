@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import Collision from '../service/Collision';
 import Circle from './Circle';
 import Rectangle from './Rectangle';
 
@@ -70,40 +71,43 @@ export default abstract class GameObject {
 
   public onRightCol(_: GameObject) { }
   
-  public abstract xColWithRect(rect: Rectangle): boolean;
-  
-  public abstract yColWithRect(rect: Rectangle): boolean;
-  
-  public abstract xColWithCircle(circle: Circle): boolean;
-  
-  public abstract yColWithCircle(circle: Circle): boolean;
-  
-  public abstract onXColWithRect(rect: Rectangle): void;
-  
-  public abstract onYColWithRect(rect: Rectangle): void;
-  
-  public abstract onXColWithCircle(circle: Circle): void;
-  
-  public abstract onYColWithCircle(circle: Circle): void;
-  
   public abstract update(context: CanvasRenderingContext2D): void;
 
   public static update(context: CanvasRenderingContext2D) {
     GameObject.rects.forEach((rect, a) => {
       const rectA = rect as Rectangle;
+
+      rectA.update(context);
       
       GameObject.rects.forEach((otherRect, b) => {
         if (a === b) return;
 
         const rectB = otherRect as Rectangle;
         
-        if (rectA.yColWithRect(rectB)) {
-          rectA.onYColWithRect(rectB);
-          rectB.onYColWithRect(rectA);
-        }
         if (rectA.xColWithRect(rectB)) {
-          rectA.onXColWithRect(rectB);
-          rectB.onXColWithRect(rectA);
+          Collision.onXRectRect(rectA, rectB);
+        }
+
+        if (rectA.yColWithRect(rectB)) {
+          Collision.onYRectRect(rectA, rectB);
+        }
+      });
+    });
+
+    GameObject.circles.forEach((circle) => {
+      const circleA = circle as Circle;
+
+      circleA.update(context);
+
+      GameObject.rects.forEach((rect) => {
+        const rectA = rect as Rectangle;
+
+        if (circleA.xColWithRect(rectA)) {
+          Collision.onXRectCircle(rectA, circleA);
+        }
+
+        if (circleA.yColWithRect(rectA)) {
+          Collision.onYRectCircle(rectA, circleA);
         }
       });
     });
@@ -111,15 +115,17 @@ export default abstract class GameObject {
     GameObject.staticRects.forEach((rect) => {
       const rectA = rect as Rectangle;
 
+      rectA.update(context);
+
       GameObject.rects.forEach((otherRect) => {
         const rectB = otherRect as Rectangle;
 
         if (rectB.xColWithRect(rectA)) {
-          rectB.onXColWithRect(rectA);
+          Collision.onXRectRect(rectA, rectB);
         }
 
         if (rectB.yColWithRect(rectA)) {
-          rectB.onYColWithRect(rectA);
+          Collision.onYRectRect(rectA, rectB);
         }
       });
 
@@ -127,39 +133,13 @@ export default abstract class GameObject {
         const circleA = circle as Circle;
 
         if (circleA.xColWithRect(rectA)) {
-          circleA.onXColWithRect(rectA);
+          Collision.onXRectCircle(rectA, circleA);
         }
 
         if (circleA.yColWithRect(rectA)) {
-          circleA.onYColWithRect(rectA);
+          Collision.onYRectCircle(rectA, circleA);
         }
       });
     });
-  
-    GameObject.circles.forEach((circle) => {
-      const circleA = circle as Circle;
-
-      GameObject.rects.forEach((rect) => {
-        const rectA = rect as Rectangle;
-
-        if (circleA.xColWithRect(rectA)) {
-          rectA.onXColWithCircle(circleA);
-          circleA.onXColWithRect(rectA);
-        }
-
-        if (circleA.yColWithRect(rectA)) {
-          rectA.onYColWithCircle(circleA);
-          circleA.onYColWithRect(rectA);
-        }
-      });
-    });
-
-    GameObject.staticRects
-      .concat(GameObject.staticCircles)
-      .concat(GameObject.rects)
-      .concat(GameObject.circles)
-      .forEach((object) => {
-        object.update(context);
-      });
   }
 }

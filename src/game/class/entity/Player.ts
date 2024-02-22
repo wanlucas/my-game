@@ -44,7 +44,7 @@ export default class Player extends Entity {
     this.sprite.create(PlayerSprite.Idle, [[56, 15, 28, 47]]);
 
     this.sprite.create(
-      'run',
+      PlayerSprite.Run,
       [
         [88, 15, 28, 47],
         [121, 15, 28, 47],
@@ -58,7 +58,7 @@ export default class Player extends Entity {
       });
 
     this.sprite.create(
-      'jump',
+      PlayerSprite.Jump,
       [
         [190, 128, 28, 47],
         [270, 128, 28, 47],
@@ -146,6 +146,7 @@ export default class Player extends Entity {
 
   public onCollision(col: GameObject) {
     if (col instanceof Orb) {
+      
       this.velocity.y = -5;
       this.velocity.x = col.velocity.x;
     }

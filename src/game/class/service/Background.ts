@@ -5,15 +5,18 @@ interface Layer {
   data: HTMLImageElement;
   rate: number;
   x: number;
+  z: number;
 }
 
 export default class Background {
   private layers: Layer[] = [];
+  private z = 0;
 
   constructor(private width: number, private height: number) {}
 
   public create(layer: string, rate: number) {
     const image = new Image();
+    const z = this.z++;
 
     image.src = layer;
     
@@ -25,9 +28,13 @@ export default class Background {
           data: image,
           rate,
           x: i * settings.width,
+          z,
         });
       }
+
+      this.layers.sort((a, b) => a.z - b.z);
     };
+
   }
 
   public draw(context: CanvasRenderingContext2D, sprain: Sprain) {

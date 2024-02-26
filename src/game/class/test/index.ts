@@ -1,5 +1,5 @@
-import OrbTester, { id as orbId } from './Orb';
+import Tester, { id as testerId } from './tester';
 
 export default {
-  [orbId]: OrbTester,
+  [testerId]: Tester,
 };

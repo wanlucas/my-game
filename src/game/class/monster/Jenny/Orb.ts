@@ -1,6 +1,6 @@
-import ArcEntity from '../../object/ArcEntity';
-import GameObject, { Position } from '../../object/GameObject';
+import { Position } from '../../object/GameObject';
 import Sprite from '../../interface/Sprite';
+import Projectile from '../../object/Projectile';
 
 enum OrbSprites {
   Idle = 'idle',
@@ -12,12 +12,17 @@ export enum Direction {
   Right,
 }
 
-export default class Orb extends ArcEntity {
+export default class Orb extends Projectile {
   public static radius = 0;
   public static speed = 15;
 
   constructor(position: Position, private direction: Direction = Direction.Left) {
-    super(position, Orb.radius,  new Sprite('data/sprites/orb.png'));
+    super(
+      position,
+      Orb.radius,  
+      Orb.speed,
+      new Sprite('data/sprites/orb.png')
+    );
 
     this.sprite.create(OrbSprites.Idle, [
       [20, 235, 140, 135],
@@ -52,21 +57,15 @@ export default class Orb extends ArcEntity {
     }
   }
 
-  public throw(target: GameObject) {
-    const dx = target.position.x - this.position.x;
-    const dy = target.position.y - this.position.y;
-
-    const angle = Math.atan2(dy, dx);
-
-    this.velocity.x = Math.cos(angle) * Orb.speed;
-    this.velocity.y = Math.sin(angle) * Orb.speed;
-  }
-
   private colliding() {
     return this.sprite.is(OrbSprites.Hit);
   }
 
+  public hit() {
+    this.sprite.set(OrbSprites.Hit);
+  }
+
   public onCollision() {
-    if (!this.colliding()) this.sprite.set(OrbSprites.Hit);
+    if (!this.colliding()) this.hit();
   }
 }

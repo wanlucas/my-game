@@ -24,8 +24,8 @@ export default class Collision {
     
     collidee.onCollision(collider);
     collider.onCollision(collidee);
-    collidee.onXCol(a);
-    collider.onXCol(b);
+    collidee.onXCol(collider);
+    collider.onXCol(collidee);
   }
 
   public static xRectRect(a: Rectangle, b: Rectangle) {
@@ -59,8 +59,8 @@ export default class Collision {
     
     collidee.onCollision(collider);
     collider.onCollision(collidee);
-    collidee.onYCol(a);
-    collider.onYCol(b);
+    collidee.onYCol(collider);
+    collider.onYCol(collidee);
   }
 
   public static yRectRect(a: Rectangle, b: Rectangle) { 
